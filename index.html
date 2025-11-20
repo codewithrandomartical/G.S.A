@@ -2,554 +2,343 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSU (303205) Exam Analysis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Business English Master Bank</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            padding-bottom: 60px;
         }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            height: 400px;
-            max-height: 450px;
-            margin-left: auto;
-            margin-right: auto;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 16px;
         }
-        @media (max-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
+        .header-card {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
         }
-        #question-list {
-            min-height: 300px;
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 8px;
         }
-        .question-card {
-            border: 1px solid #e2e8f0;
-            transition: box-shadow 0.3s ease-in-out;
+        .section-number {
+            background: #1f2937;
+            color: white;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 700;
         }
-        .question-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #111827;
+        }
+        
+        /* Question Card Styles */
+        .q-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+        .q-card:active {
+            transform: scale(0.99);
+        }
+        .q-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .tag {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .tag-year { background: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db; }
+        .tag-odd { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; } /* For 2021, 2023 */
+        .tag-high { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; } /* For frequent topics */
+        
+        .q-text {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        .q-meta {
+            font-size: 0.85rem;
+            color: #6b7280;
+            background: #f9fafb;
+            padding: 8px;
+            border-radius: 6px;
+            border-left: 3px solid #cbd5e1;
+        }
+        
+        /* Tabs */
+        .tab-nav {
+            display: flex;
+            background: white;
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        .tab-btn.active {
+            background: #eff6ff;
+            color: #1d4ed8;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body>
 
-    <!-- Chosen Palette: Calm Neutrals (Tailwind Slate, Sky, Amber) -->
-    <!-- Application Structure Plan: Designed a two-part SPA. Part 1 is a "Dashboard" with KPIs (Top Topics) and two charts (Topic Frequency Bar, Type Donut) to provide a high-level summary. Part 2 is a "Question Explorer" with a 3-column filter panel (Topic, Year, Type) and a keyword search, which dynamically filters a list of "question cards". This structure was chosen over a linear (by-year) one because it allows users to *synthesize* data and answer their primary question: "What should I study?" The bar chart is interactive and filters the explorer, connecting the two sections. -->
-    <!-- Visualization & Content Choices: 1. Topic Frequency (Report Info: All questions) -> Goal: Compare -> Viz: Horizontal Bar Chart (Chart.js/Canvas) -> Interaction: Click bar to filter explorer -> Justification: Best way to see high-priority topics. Horizontal for label readability. 2. Type Distribution (Report Info: Question marks) -> Goal: Inform (Composition) -> Viz: Donut Chart (Chart.js/Canvas) -> Interaction: Hover -> Justification: Shows paper structure at a glance. 3. Question List (Report Info: All question text/meta) -> Goal: Organize/Explore -> Viz: Dynamic HTML List (JS) -> Interaction: Filters update list -> Justification: The core "database" for the user. NO SVG/Mermaid used. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<div class="container">
 
-    <header class="bg-white shadow-sm sticky top-0 z-10">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <h1 class="text-2xl font-bold text-sky-700">Operating System & UNIX (303205) Exam Analysis</h1>
-            <p class="text-sm text-slate-600">Interactive Dashboard & Question Bank (2019 - 2024)</p>
+    <!-- Header -->
+    <div class="header-card">
+        <h1 class="text-2xl font-bold">Business English Question Bank</h1>
+        <p class="opacity-90 text-sm mt-1">Complete Compilation (2018 - 2023)</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+            <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-semibold">12 Marks</span>
+            <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-semibold">4 Marks</span>
+            <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-semibold">Odd Year Focus</span>
         </div>
-    </header>
+    </div>
 
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
-
-        <!-- Section 1: Dashboard -->
-        <section id="dashboard" class="mb-12">
-            <h2 class="text-3xl font-semibold mb-3 text-slate-900">Analysis Dashboard</h2>
-            <p class="text-lg text-slate-700 mb-6 max-w-4xl">
-                Welcome! This application analyzes 5 years of "Operating System & UNIX" (303205) question papers to help you identify key themes and high-frequency topics. The charts below show the overall topic frequency and question types. You can <strong class="text-sky-600">click a topic on the "Topic Frequency" chart</strong> to automatically filter the question list below.
-            </p>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-lg shadow">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-2">Topics with 100% Repetition</h3>
-                    <ul id="kpi-100-percent" class="list-disc list-inside text-amber-700 font-medium">
-                    </ul>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-2">Top 3 Most Frequent Topics</h3>
-                    <ul id="kpi-top-3" class="list-disc list-inside text-sky-700 font-medium">
-                    </ul>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-2">Total Questions Analyzed</h3>
-                    <p id="kpi-total" class="text-4xl font-bold text-slate-900"></p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow w-full">
-                    <h3 class="text-xl font-semibold text-center mb-4 text-slate-900">Topic Frequency (2019-2024)</h3>
-                    <div class="chart-container" style="height: 500px; max-height: 550px;">
-                        <canvas id="topicFrequencyChart"></canvas>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow w-full">
-                    <h3 class="text-xl font-semibold text-center mb-4 text-slate-900">Question Type Distribution</h3>
-                    <div class="chart-container" style="height: 500px; max-height: 550px;">
-                        <canvas id="typeFrequencyChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 2: Question Explorer -->
-        <section id="explorer" class="mt-16">
-            <h2 class="text-3xl font-semibold mb-3 text-slate-900">Interactive Question Explorer</h2>
-            <p class="text-lg text-slate-700 mb-8 max-w-4xl">
-                Explore all 100+ questions from the last five papers. Use the filters to narrow your search by topic, year, question type, or keyword. The list will update instantly as you make your selections.
-            </p>
-
-            <div class="md:flex md:gap-8">
-                <!-- Filter Panel -->
-                <aside id="filter-panel" class="md:w-1/3 lg:w-1/4 bg-white p-6 rounded-lg shadow self-start sticky top-24">
-                    <h3 class="text-xl font-semibold mb-4 text-slate-900">Filters</h3>
-                    <div id="filters-form" class="space-y-6">
-                        <div>
-                            <label for="search-keyword" class="block text-sm font-medium text-slate-700 mb-1">Search Keyword</label>
-                            <input type="text" id="search-keyword" placeholder="e.g., 'Banker', 'FIFO', 'shell'" class="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500">
-                        </div>
-                        
-                        <div>
-                            <h4 class="text-sm font-medium text-slate-700 mb-2">Topic</h4>
-                            <div id="topic-filters" class="max-h-60 overflow-y-auto space-y-1 pr-2">
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h4 class="text-sm font-medium text-slate-700 mb-2">Year</h4>
-                            <div id="year-filters" class="space-y-1">
-                            </div>
-                        </div>
-
-                        <div>
-                            <h4 class="text-sm font-medium text-slate-700 mb-2">Question Type (Marks)</h4>
-                            <div id="type-filters" class="space-y-1">
-                            </div>
-                        </div>
-
-                        <button id="reset-filters" class="w-full bg-slate-500 text-white px-4 py-2 rounded-md hover:bg-slate-600 transition-colors">Reset All Filters</button>
-                    </div>
-                </aside>
-
-                <!-- Results Panel -->
-                <main id="results-panel" class="md:w-2/3 lg:w-3/4 mt-8 md:mt-0">
-                    <p id="results-count" class="text-lg text-slate-700 mb-4 font-medium"></p>
-                    <div id="question-list" class="space-y-4">
-                        <!-- Question cards will be injected here by JS -->
-                    </div>
-                </main>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="text-center py-8 mt-12 border-t border-slate-200">
-        <p class="text-sm text-slate-500">Analysis based on OSU BCA 2nd Sem (303205) papers from 2019, 2021, 2022, 2023, & 2024.</p>
-    </footer>
-
-    <script>
-        // --- DATA ---
-        // This is the "database" extracted and analyzed from the 5 PDF files.
-        const allQuestions = [
-          {id: 1, year: 2024, type: 2, topic: 'OS Concepts', question: 'What is an operating system?'},
-          {id: 2, year: 2024, type: 2, topic: 'Scheduling', question: 'What is scheduling?'},
-          {id: 3, year: 2024, type: 2, topic: 'Process Mgt', question: 'What is the difference between process and program?'},
-          {id: 4, year: 2024, type: 2, topic: 'Synchronization', question: 'What are semaphores?'},
-          {id: 5, year: 2024, type: 2, topic: 'Memory Mgt', question: 'What is logical address space?'},
-          {id: 6, year: 2024, type: 2, topic: 'Threads', question: 'Define threads.'},
-          {id: 7, year: 2024, type: 2, topic: 'UNIX/Linux', question: 'What is the use of grep commands?'},
-          {id: 8, year: 2024, type: 2, topic: 'UNIX/Linux', question: 'What is the purpose of vi editor?'},
-          {id: 9, year: 2024, type: 2, topic: 'UNIX/Linux', question: 'What is the purpose of shell?'},
-          {id: 10, year: 2024, type: 2, topic: 'UNIX/Linux', question: 'What is the purpose of pipes and filters?'},
-          {id: 11, year: 2024, type: 4, topic: 'Scheduling', question: 'Explain the difference between timesharing and multiprogramming operating system.'},
-          {id: 12, year: 2024, type: 4, topic: 'Synchronization', question: 'Explain interprocess communication.'},
-          {id: 13, year: 2024, type: 4, topic: 'Deadlock', question: 'What is the difference between deadlock avoidance and deadlock prevention?'},
-          {id: 14, year: 2024, type: 4, topic: 'Memory Mgt', question: 'Describe the difference between logical and physical address space.'},
-          {id: 15, year: 2024, type: 4, topic: 'UNIX/Linux', question: 'Write notes on sort, tsort and cat commands.'},
-          {id: 16, year: 2024, type: 12, topic: 'Memory Mgt', question: 'Discuss how paging is combined into a segmentation scheme.'},
-          {id: 17, year: 2024, type: 12, topic: 'Synchronization', question: 'Explain the classical problems of synchronization.'},
-          {id: 18, year: 2024, type: 12, topic: 'Memory Mgt', question: 'Discuss the concept of swapping, demand paging and thrashing.'},
-          {id: 19, year: 2024, type: 12, topic: 'UNIX/Linux', question: 'Discuss the structure of LINUX Operating System.'},
-          {id: 20, year: 2024, type: 12, topic: 'File System', question: 'What is a file? What are different types of file? Explain various file access methods.'},
-          
-          {id: 21, year: 2023, type: 2, topic: 'Scheduling', question: 'How to define scheduling?'},
-          {id: 22, year: 2023, type: 2, topic: 'I/O & Misc', question: 'What is the use of I/O buffering?'},
-          {id: 23, year: 2023, type: 2, topic: 'Threads', question: 'What is the purpose of threads?'},
-          {id: 24, year: 2023, type: 2, topic: 'Deadlock', question: 'What is the purpose of precedence graph?'},
-          {id: 25, year: 2023, type: 2, topic: 'Memory Mgt', question: 'What is the use of memory management unit?'},
-          {id: 26, year: 2023, type: 2, topic: 'Memory Mgt', question: 'What is the difference between frame and page table?'},
-          {id: 27, year: 2023, type: 2, topic: 'UNIX/Linux', question: 'What is the use of mv and wc command?'},
-          {id: 28, year: 2023, type: 2, topic: 'UNIX/Linux', question: 'What is the meaning of shell?'},
-          {id: 29, year: 2023, type: 2, topic: 'UNIX/Linux', question: 'With respect to shell, what is the purpose of job control?'},
-          {id: 30, year: 2023, type: 2, topic: 'UNIX/Linux', question: 'What is the purpose of pipes and filters?'},
-          {id: 31, year: 2023, type: 4, topic: 'Scheduling', question: 'Defend timesharing differs from multiprogramming. If so, how?'},
-          {id: 32, year: 2023, type: 4, topic: 'Threads', question: 'List two programming examples of multithreading giving improved performance over a single-threaded solution.'},
-          {id: 33, year: 2023, type: 4, topic: 'Page Replacement', question: 'What are the steps required to handle a page fault in demand paging?'},
-          {id: 34, year: 2023, type: 4, topic: 'UNIX/Linux', question: 'What is the use of vi editor? Write down the features of vi editor.'},
-          {id: 35, year: 2023, type: 4, topic: 'UNIX/Linux', question: 'With respect to Linux utilities, what is the purpose of permission modes and standard files?'},
-          {id: 36, year: 2023, type: 12, topic: 'Synchronization', question: 'What is critical section problem? Discuss the solution to producer-consumer problem using semaphores.'},
-          {id: 37, year: 2023, type: 12, topic: 'Deadlock', question: 'What is the necessary condition of deadlock? Discuss deadlock detection (Banker\'s algorithm) with an example.'},
-          {id: 38, year: 2023, type: 12, topic: 'UNIX/Linux', question: 'With respect to Linux, discuss Linux process and thread management.'},
-          {id: 39, year: 2023, type: 12, topic: 'Page Replacement', question: 'Consider the following reference string : 7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1. Assume there are three frames. Apply LRU replacement algorithm to the reference string above and find out how many page faults are produced.'},
-          {id: 40, year: 2023, type: 12, topic: 'OS Concepts', question: 'Discuss briefly real-time operating system and batch operating system.'},
-
-          {id: 41, year: 2022, type: 2, topic: 'Memory Mgt', question: 'What is caching?'},
-          {id: 42, year: 2022, type: 2, topic: 'Scheduling', question: 'What is scheduler?'},
-          {id: 43, year: 2022, type: 2, topic: 'Scheduling', question: 'What is multiprogramming?'},
-          {id: 44, year: 2022, type: 2, topic: 'Memory Mgt', question: 'What is internal fragmentation?'},
-          {id: 45, year: 2022, type: 2, topic: 'UNIX/Linux', question: 'What is the use of vi editor?'},
-          {id: 46, year: 2022, type: 2, topic: 'UNIX/Linux', question: 'What is the use of tsort command in Unix?'},
-          {id: 47, year: 2022, type: 2, topic: 'UNIX/Linux', question: 'What is vim?'},
-          {id: 48, year: 2022, type: 2, topic: 'I/O & Misc', question: 'What are device drivers?'},
-          {id: 49, year: 2022, type: 2, topic: 'I/O & Misc', question: 'What is spooling?'},
-          {id: 50, year: 2022, type: 2, topic: 'Page Replacement', question: 'What is thrashing?'},
-          {id: 51, year: 2022, type: 4, topic: 'Scheduling', question: 'Describe the difference among long term, medium term and short-term scheduler.'},
-          {id: 52, year: 2022, type: 4, topic: 'Memory Mgt', question: 'Describe the difference between internal fragmentation and external fragmentation.'},
-          {id: 53, year: 2022, type: 4, topic: 'Deadlock', question: 'Describe the difference between safe and unsafe states of deadlock.'},
-          {id: 54, year: 2022, type: 4, topic: 'UNIX/Linux', question: 'What are the features of Linux?'},
-          {id: 55, year: 2022, type: 4, topic: 'UNIX/Linux', question: 'What is the meaning of shell and what is its purpose?'},
-          {id: 56, year: 2022, type: 12, topic: 'Scheduling', question: 'Briefly discuss scheduling algorithms.'},
-          {id: 57, year: 2022, type: 12, topic: 'Synchronization', question: 'Discuss the classical problem of synchronization.'},
-          {id: 58, year: 2022, type: 12, topic: 'Page Replacement', question: 'Discuss the page replacement algorithms.'},
-          {id: 59, year: 2022, type: 12, topic: 'Memory Mgt', question: 'What is paging? Discuss its advantages and disadvantages.'},
-          {id: 60, year: 2022, type: 12, topic: 'UNIX/Linux', question: 'What is shell? Discuss its types. What are shell variables?'},
-          
-          {id: 61, year: 2021, type: 2, topic: 'OS Concepts', question: 'What is the relationship between operating systems and computer hardware?'},
-          {id: 62, year: 2021, type: 2, topic: 'Process Mgt', question: 'What is the difference between job and process?'},
-          {id: 63, year: 2021, type: 2, topic: 'OS Concepts', question: 'What is batch processing system?'},
-          {id: 64, year: 2021, type: 2, topic: 'OS Concepts', question: 'Define real time system.'},
-          {id: 65, year: 2021, type: 2, topic: 'Process Mgt', question: 'Define process.'},
-          {id: 66, year: 2021, type: 2, topic: 'Threads', question: 'Define thread.'},
-          {id: 67, year: 2021, type: 2, topic: 'Memory Mgt', question: 'What is memory management?'},
-          {id: 68, year: 2021, type: 2, topic: 'Deadlock', question: 'Define deadlock.'},
-          {id: 69, year: 2021, type: 2, topic: 'Memory Mgt', question: 'What do you mean by paging?'},
-          {id: 70, year: 2021, type: 2, topic: 'Scheduling', question: 'What is scheduling?'},
-          {id: 71, year: 2021, type: 4, topic: 'OS Concepts', question: 'What is the difference between kernel mode and user mode?'},
-          {id: 72, year: 2021, type: 4, topic: 'Scheduling', question: 'What criteria affect the scheduler\'s performance?'},
-          {id: 73, year: 2021, type: 4, topic: 'Page Replacement', question: 'When does a page fault occur?'},
-          {id: 74, year: 2021, type: 4, topic: 'OS Concepts', question: 'What are the advantages and disadvantages of batch processing system?'},
-          {id: 75, year: 2021, type: 4, topic: 'UNIX/Linux', question: 'Write some features of Linux Operating System.'},
-          {id: 76, year: 2021, type: 12, topic: 'OS Concepts', question: 'Describe system calls and its type.'},
-          {id: 77, year: 2021, type: 12, topic: 'Threads', question: 'Describe the difference among user level, kernel level and hybrid level thread.'},
-          {id: 78, year: 2021, type: 12, topic: 'Deadlock', question: 'Discuss the methods for handling deadlock.'},
-          {id: 79, year: 2021, type: 12, topic: 'Scheduling', question: 'What are the different types of CPU scheduling algorithms? Explain any two.'},
-          {id: 80, year: 2021, type: 12, topic: 'Memory Mgt', question: 'Explain segmentation memory management.'},
-          
-          {id: 81, year: 2019, type: 2, topic: 'OS Concepts', question: 'What is the need of Operating System?'},
-          {id: 82, year: 2019, type: 2, topic: 'Process Mgt', question: 'What is a process?'},
-          {id: 83, year: 2019, type: 2, topic: 'Page Replacement', question: 'Discuss the concept of thrashing.'},
-          {id: 84, year: 2019, type: 2, topic: 'Threads', question: 'What is a thread?'},
-          {id: 85, year: 2019, type: 2, topic: 'Synchronization', question: 'Define critical section.'},
-          {id: 86, year: 2019, type: 2, topic: 'UNIX/Linux', question: 'How is the time set and shown in Linux?'},
-          {id: 87, year: 2019, type: 2, topic: 'UNIX/Linux', question: 'List different components of a Linux system.'},
-          {id: 88, year: 2019, type: 2, topic: 'File System', question: 'Why is file protection necessary?'},
-          {id: 89, year: 2019, type: 2, topic: 'Memory Mgt', question: 'Define the physical address space.'},
-          {id: 90, year: 2019, type: 2, topic: 'I/O & Misc', question: 'Define anti-virus and its types.'},
-          {id: 91, year: 2019, type: 4, topic: 'OS Concepts', question: 'What is an operating system? What are the various services provided by the operating systems?'},
-          {id: 92, year: 2019, type: 4, topic: 'Deadlock', question: 'What are the various deadlock conditions? Explain in detail. Also, write banker algorithm.'},
-          {id: 93, year: 2019, type: 4, topic: 'Memory Mgt', question: 'Discuss in detail internal and external fragmentation.'},
-          {id: 94, year: 2019, type: 4, topic: 'UNIX/Linux', question: 'Explain basic features of UNIX/Linux.'},
-          {id: 95, year: 2019, type: 4, topic: 'Page Replacement', question: 'Differentiate between the following: (i) Paging and demand paging (ii) LRU and optimal page replacement algorithm'},
-          {id: 96, year: 2019, type: 12, topic: 'Process Mgt', question: 'Explain the different states of the process. What is the purpose of process control block?'},
-          {id: 97, year: 2019, type: 12, topic: 'File System', question: 'What is a file? What are different types of file? Explain various file access methods.'},
-          {id: 98, year: 2019, type: 12, topic: 'Synchronization', question: 'What are semaphores? How are they implemented?'},
-          {id: 99, year: 2019, type: 12, topic: 'UNIX/Linux', question: 'Write a procedure to log in and log out for Linux operating system. Write steps for changing shell prompt.'},
-          {id: 100, year: 2019, type: 12, topic: 'UNIX/Linux', question: 'Discuss the structure of LINUX Operating System.'}
-        ];
-
-        // --- GLOBAL STATE ---
-        let topicFrequencyChart = null;
-        let typeFrequencyChart = null;
-        let uniqueTopics = [];
-        const uniqueYears = [2024, 2023, 2022, 2021, 2019];
-        const uniqueTypes = [12, 4, 2];
-
-        // --- DOM ELEMENTS ---
-        const $ = (selector) => document.querySelector(selector);
-        const $$ = (selector) => document.querySelectorAll(selector);
-
-        const $topicFilters = $('#topic-filters');
-        const $yearFilters = $('#year-filters');
-        const $typeFilters = $('#type-filters');
-        const $searchInput = $('#search-keyword');
-        const $resultsCount = $('#results-count');
-        const $questionList = $('#question-list');
-        const $resetButton = $('#reset-filters');
+    <!-- Topic Based Organization -->
+    <div id="section-c">
+        <div class="section-header">
+            <div class="section-number">C</div>
+            <div class="section-title">12 Marks Questions (Long Answer)</div>
+        </div>
         
-        const $kpi100 = $('#kpi-100-percent');
-        const $kpiTop3 = $('#kpi-top-3');
-        const $kpiTotal = $('#kpi-total');
+        <!-- Category: Writing Skills -->
+        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 ml-1">1. Professional Writing</h3>
+        
+        <div class="q-card border-l-4 border-l-indigo-500">
+            <div class="q-tags">
+                <span class="tag tag-odd">2023</span>
+                <span class="tag tag-odd">2021</span>
+                <span class="tag tag-high">Odd Year Trend</span>
+            </div>
+            <div class="q-text">Proposal Writing</div>
+            <div class="q-meta">
+                <strong>Questions Asked:</strong><br>
+                • Prepare a proposal for an International Conference on Communication Challenges. (2023)<br>
+                • What is the importance of a proposal? Write the structure of a proposal. (2021)
+            </div>
+        </div>
 
-        // --- INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. Process data
-            const topicFrequency = calculateTopicFrequency(allQuestions);
-            uniqueTopics = Object.keys(topicFrequency).sort();
+        <div class="q-card border-l-4 border-l-indigo-500">
+            <div class="q-tags">
+                <span class="tag tag-year">2022</span>
+                <span class="tag tag-year">2019</span>
+                <span class="tag tag-year">2018</span>
+                <span class="tag tag-high">Most Repeated</span>
+            </div>
+            <div class="q-text">Business Letter (Complaint/Enquiry)</div>
+            <div class="q-meta">
+                <strong>Questions Asked:</strong><br>
+                • Write an enquiry letter to a seller asking for details to buy computers. (2022)<br>
+                • Write a letter of complaint regarding damaged computer peripherals received in a consignment. (2019, 2018)<br>
+                • Discuss the different types of letters. How is an enquiry letter different from a claim letter? (2021)
+            </div>
+        </div>
 
-            // 2. Init Dashboard
-            initDashboard(topicFrequency);
+        <div class="q-card border-l-4 border-l-indigo-500">
+            <div class="q-tags">
+                <span class="tag tag-year">2021</span>
+            </div>
+            <div class="q-text">Report Writing</div>
+            <div class="q-meta">
+                <strong>Questions Asked:</strong><br>
+                • Define report. What are the characteristics and objectives of a report?
+            </div>
+        </div>
 
-            // 3. Init Explorer
-            populateFilters();
-            renderQuestionList(allQuestions);
+        <!-- Category: Data Interpretation -->
+        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 ml-1 mt-6">2. Data Interpretation (Graphs)</h3>
+        
+        <div class="q-card border-l-4 border-l-green-500">
+            <div class="q-tags">
+                <span class="tag tag-odd">2023</span>
+                <span class="tag tag-odd">2021</span>
+                <span class="tag tag-high">High Chance for 2025</span>
+            </div>
+            <div class="q-text">Graph Interpretation</div>
+            <div class="q-meta">
+                <strong>Questions Asked:</strong><br>
+                • <span class="text-green-700 font-bold">Bar Chart:</span> Summarize info on men/women studying engineering. (2023)<br>
+                • <span class="text-green-700 font-bold">Line Graph:</span> Interpret graph showing training needs of managers. (2021)
+            </div>
+        </div>
 
-            // 4. Add Event Listeners
-            $searchInput.addEventListener('input', handleFilterChange);
-            $resetButton.addEventListener('click', resetFilters);
-            $topicFilters.addEventListener('change', handleFilterChange);
-            $yearFilters.addEventListener('change', handleFilterChange);
-            $typeFilters.addEventListener('change', handleFilterChange);
-        });
+        <!-- Category: Communication Theory -->
+        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 ml-1 mt-6">3. Communication Theory</h3>
+        
+        <div class="q-card">
+            <div class="q-tags">
+                <span class="tag tag-year">2023</span>
+            </div>
+            <div class="q-text">Cross-Cultural Management</div>
+            <div class="q-meta">
+                • Write an essay on 'Cross-cultural management'.<br>
+                • What factors will you bear in mind while dealing with people from a different cultural background?
+            </div>
+        </div>
 
-        // --- DASHBOARD FUNCTIONS ---
-        function initDashboard(topicFrequency) {
-            // --- KPIs ---
-            $kpiTotal.textContent = allQuestions.length;
-            
-            const topicsPerYear = {};
-            uniqueTopics.forEach(topic => topicsPerYear[topic] = new Set());
-            allQuestions.forEach(q => {
-                if(topicsPerYear[q.topic]) {
-                    topicsPerYear[q.topic].add(q.year);
-                }
-            });
+        <div class="q-card">
+            <div class="q-tags">
+                <span class="tag tag-year">2022</span>
+            </div>
+            <div class="q-text">Barriers & Listening</div>
+            <div class="q-meta">
+                • What are common barriers to communication? Give examples.<br>
+                • "Listening is more important than speaking." Do you agree?<br>
+                • Distinguish between Intrapersonal and Interpersonal communication.
+            </div>
+        </div>
+        
+        <div class="q-card">
+            <div class="q-tags">
+                <span class="tag tag-year">2022</span>
+            </div>
+            <div class="q-text">Non-Verbal Communication</div>
+            <div class="q-meta">
+                • "Non-verbal communication can make or mar a speech." Discuss.
+            </div>
+        </div>
+    </div>
 
-            const topics100 = Object.keys(topicsPerYear).filter(topic => topicsPerYear[topic].size === uniqueYears.length);
-            $kpi100.innerHTML = topics100.length > 0 ? topics100.map(topic => `<li>${topic}</li>`).join('') : '<li>None</li>';
+    <div id="section-b">
+        <div class="section-header">
+            <div class="section-number bg-indigo-600">B</div>
+            <div class="section-title">4 Marks Questions (Short Answer)</div>
+        </div>
 
-            const sortedTopics = Object.entries(topicFrequency).sort(([,a],[,b]) => b-a);
-            $kpiTop3.innerHTML = sortedTopics.slice(0, 3).map(([topic, count]) => `<li>${topic} (${count})</li>`).join('');
+        <!-- Category: Differences -->
+        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 ml-1">1. "Distinguish Between"</h3>
 
-            // --- Charts ---
-            initTopicFrequencyChart(topicFrequency);
-            initTypeFrequencyChart();
-        }
+        <div class="q-card border-l-4 border-l-indigo-600">
+            <div class="q-tags">
+                <span class="tag tag-year">2019</span>
+                <span class="tag tag-year">2018</span>
+                <span class="tag tag-high">100% Repeated</span>
+            </div>
+            <div class="q-text">Notice vs Agenda vs Circular</div>
+            <div class="q-meta">Differentiate between Notice, Agenda, and Circular.</div>
+        </div>
 
-        function calculateTopicFrequency(questions) {
-            const frequency = {};
-            questions.forEach(q => {
-                frequency[q.topic] = (frequency[q.topic] || 0) + 1;
-            });
-            return frequency;
-        }
+        <div class="q-card border-l-4 border-l-indigo-600">
+            <div class="q-tags">
+                <span class="tag tag-year">2022</span>
+                <span class="tag tag-year">2019</span>
+                <span class="tag tag-year">2018</span>
+            </div>
+            <div class="q-text">Resume vs Biodata vs CV</div>
+            <div class="q-meta">
+                • Discuss the types of resumes.<br>
+                • How is Resume different from Biodata?
+            </div>
+        </div>
 
-        function initTopicFrequencyChart(topicFrequency) {
-            const ctx = $('#topicFrequencyChart').getContext('2d');
-            
-            const sortedData = Object.entries(topicFrequency).sort(([,a],[,b]) => a-b);
-            const labels = sortedData.map(entry => entry[0]);
-            const data = sortedData.map(entry => entry[1]);
+        <div class="q-card">
+            <div class="q-tags">
+                <span class="tag tag-year">2022</span>
+            </div>
+            <div class="q-text">Impromptu Speech vs Debate</div>
+        </div>
+        
+        <div class="q-card">
+            <div class="q-tags">
+                <span class="tag tag-year">2022</span>
+            </div>
+            <div class="q-text">Letters vs Memos vs Emails</div>
+        </div>
 
-            if (topicFrequencyChart) {
-                topicFrequencyChart.destroy();
-            }
+        <!-- Category: Short Notes -->
+        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 ml-1 mt-6">2. Short Notes</h3>
 
-            topicFrequencyChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: '# of Questions',
-                        data: data,
-                        backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                        borderColor: 'rgba(59, 130, 246, 1)',
-                        borderWidth: 1,
-                        hoverBackgroundColor: 'rgba(59, 130, 246, 1)',
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            }
-                        },
-                        y: {
-                            ticks: {
-                                autoSkip: false
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                title: (tooltipItems) => tooltipItems[0].label,
-                                label: (context) => ` ${context.parsed.x} questions`
-                            }
-                        }
-                    },
-                    onClick: (event, elements) => {
-                        if (elements.length > 0) {
-                            const clickedIndex = elements[0].index;
-                            const clickedTopic = labels[clickedIndex];
-                            filterByTopic(clickedTopic);
-                        }
-                    }
-                }
-            });
-        }
+        <div class="q-card">
+            <div class="q-tags">
+                <span class="tag tag-year">2023</span>
+            </div>
+            <div class="q-text">Listening & Speaking</div>
+            <div class="q-meta">
+                • What are the traits of good listeners?<br>
+                • Voice quality impacts business presentation. Discuss.
+            </div>
+        </div>
 
-        function initTypeFrequencyChart() {
-            const ctx = $('#typeFrequencyChart').getContext('2d');
-            const typeFrequency = { 2: 0, 4: 0, 12: 0 };
-            
-            allQuestions.forEach(q => {
-                typeFrequency[q.type] = (typeFrequency[q.type] || 0) + 1;
-            });
+        <div class="q-card">
+            <div class="q-tags">
+                <span class="tag tag-year">2021</span>
+            </div>
+            <div class="q-text">Interviews & Meetings</div>
+            <div class="q-meta">
+                • Personality traits required for a job interview.<br>
+                • Define Agenda. What purpose does it serve?<br>
+                • Group Discussion: Relevance and Purpose.
+            </div>
+        </div>
 
-            if (typeFrequencyChart) {
-                typeFrequencyChart.destroy();
-            }
+        <div class="q-card">
+            <div class="q-tags">
+                <span class="tag tag-year">2022</span>
+            </div>
+            <div class="q-text">Business Etiquette</div>
+            <div class="q-meta">What do you understand by business etiquettes?</div>
+        </div>
 
-            typeFrequencyChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['2 Mark Questions', '4 Mark Questions', '12 Mark Questions'],
-                    datasets: [{
-                        label: 'Question Types',
-                        data: [typeFrequency[2], typeFrequency[4], typeFrequency[12]],
-                        backgroundColor: [
-                            'rgba(251, 191, 36, 0.7)',
-                            'rgba(59, 130, 246, 0.7)',
-                            'rgba(239, 68, 68, 0.7)',
-                        ],
-                        borderColor: [
-                            'rgba(251, 191, 36, 1)',
-                            'rgba(59, 130, 246, 1)',
-                            'rgba(239, 68, 68, 1)',
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                        },
-                        tooltip: {
-                             callbacks: {
-                                label: (context) => {
-                                    const label = context.label || '';
-                                    const value = context.parsed;
-                                    const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((value / total) * 100).toFixed(1);
-                                    return ` ${label}: ${value} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
+        <div class="q-card">
+            <div class="q-tags">
+                <span class="tag tag-year">2019</span>
+                <span class="tag tag-year">2018</span>
+            </div>
+            <div class="q-text">Business Correspondence</div>
+            <div class="q-meta">
+                • Structure and layout of a business letter.<br>
+                • Principles of business correspondence.
+            </div>
+        </div>
+    </div>
 
-        // --- EXPLORER FUNCTIONS ---
-        function populateFilters() {
-            $topicFilters.innerHTML = uniqueTopics.map(topic => `
-                <div class="flex items-center">
-                    <input id="topic-${topic.replace(/\s+/g, '-')}" name="topic" type="checkbox" value="${topic}" class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
-                    <label for="topic-${topic.replace(/\s+/g, '-')}" class="ml-2 block text-sm text-slate-900">${topic}</label>
-                </div>
-            `).join('');
+    <div class="text-center text-xs text-slate-400 mt-8">
+        2025 Exam Preparation • Based on 5 Years PYQ
+    </div>
 
-            $yearFilters.innerHTML = uniqueYears.map(year => `
-                <div class="flex items-center">
-                    <input id="year-${year}" name="year" type="checkbox" value="${year}" class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
-                    <label for="year-${year}" class="ml-2 block text-sm text-slate-900">${year}</label>
-                </div>
-            `).join('');
+</div>
 
-            $typeFilters.innerHTML = uniqueTypes.map(type => `
-                <div class="flex items-center">
-                    <input id="type-${type}" name="type" type="checkbox" value="${type}" class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
-                    <label for="type-${type}" class="ml-2 block text-sm text-slate-900">${type} Marks</label>
-                </div>
-            `).join('');
-        }
-
-        function getSelectedFilters(groupName) {
-            return Array.from($$(`input[name="${groupName}"]:checked`)).map(cb => cb.value);
-        }
-
-        function handleFilterChange() {
-            const selectedTopics = getSelectedFilters('topic').map(val => String(val));
-            const selectedYears = getSelectedFilters('year').map(val => parseInt(val, 10));
-            const selectedTypes = getSelectedFilters('type').map(val => parseInt(val, 10));
-            const searchTerm = $searchInput.value.toLowerCase();
-
-            const filteredQuestions = allQuestions.filter(q => {
-                const matchesTopic = selectedTopics.length === 0 || selectedTopics.includes(q.topic);
-                const matchesYear = selectedYears.length === 0 || selectedYears.includes(q.year);
-                const matchesType = selectedTypes.length === 0 || selectedTypes.includes(q.type);
-                const matchesSearch = searchTerm === '' || q.question.toLowerCase().includes(searchTerm) || q.topic.toLowerCase().includes(searchTerm);
-                
-                return matchesTopic && matchesYear && matchesType && matchesSearch;
-            });
-
-            renderQuestionList(filteredQuestions);
-        }
-
-        function renderQuestionList(questions) {
-            $resultsCount.textContent = `Showing ${questions.length} of ${allQuestions.length} questions`;
-            if (questions.length === 0) {
-                $questionList.innerHTML = `<div class="bg-white p-6 rounded-lg shadow text-center text-slate-500">
-                    <h4 class="text-lg font-medium">No Questions Found</h4>
-                    <p>Try adjusting your filters.</p>
-                </div>`;
-                return;
-            }
-
-            $questionList.innerHTML = questions
-                .sort((a, b) => b.year - a.year || a.topic.localeCompare(b.topic))
-                .map(q => `
-                    <div class="question-card bg-white p-5 rounded-lg shadow-sm">
-                        <p class="text-base text-slate-800 mb-3">${q.question}</p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-sky-100 text-sky-800">
-                                ${q.topic}
-                            </span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                                ${q.year}
-                            </span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
-                                ${q.type} Marks
-                            </span>
-                        </div>
-                    </div>
-                `).join('');
-        }
-
-        function resetFilters() {
-            $$('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            $searchInput.value = '';
-            renderQuestionList(allQuestions);
-        }
-
-        function filterByTopic(topic) {
-            // 1. Reset all filters
-            $$('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            $searchInput.value = '';
-
-            // 2. Check the one topic
-            const topicCheckbox = $(`#topic-${topic.replace(/\s+/g, '-')}`);
-            if (topicCheckbox) {
-                topicCheckbox.checked = true;
-            }
-            
-            // 3. Apply filter
-            handleFilterChange();
-            
-            // 4. Scroll to explorer
-            $('#explorer').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    </script>
 </body>
 </html>
