@@ -3,8 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G.S.D Student Dashboard</title>
+    <title>G.S.A Student Portal - Dashboard</title>
     
+    <!-- Link Preview / Open Graph Tags -->
+    <meta property="og:site_name" content="G.S.A Portal">
+    <meta property="og:title" content="G.S.A Student Dashboard & Directory">
+    <meta property="og:description" content="Access the official G.S.A portal. View live statistics, active batches, and the complete directory of 62 students from CSE and BCA departments.">
+    <!-- Generated a Dark Theme Avatar to match the Sidebar -->
+    <meta property="og:image" content="https://ui-avatars.com/api/?name=G+S+A&background=111827&color=fff&size=512&font-size=0.33&length=3&bold=true">
+    <meta property="og:url" content="https://gsa-portal.web.app">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="G.S.A Student Dashboard">
+    <meta name="twitter:description" content="Manage student records and view department analytics for G.S.A.">
+    <meta name="twitter:image" content="https://ui-avatars.com/api/?name=G+S+A&background=111827&color=fff&size=512&font-size=0.33&length=3&bold=true">
+
+    <!-- Favicon (Using Google Blue) -->
+    <link rel="icon" href="https://ui-avatars.com/api/?name=G&background=4285F4&color=fff&rounded=true" type="image/png">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -20,280 +38,320 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f0f4f8; /* Softer, modern gray-blue */
-            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
-            background-size: 24px 24px;
+            background-color: #f3f4f6;
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
         }
 
-        /* Futuristic Glassmorphism */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+        /* Sidebar Gradient - Dark Theme */
+        .sidebar-bg {
+            background-color: #111827; /* Gray-900 */
         }
 
-        /* 3D Button Styles */
-        .btn-3d {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            top: 0;
-            box-shadow: 0 6px 0 0 #312e81, 
-                        0 10px 10px rgba(0,0,0,0.1);
-        }
-        .btn-3d:active, .btn-3d.active-tab {
-            top: 6px;
-            box-shadow: 0 0 0 0 #312e81, 
-                        0 0 0 rgba(0,0,0,0.1);
-        }
-        .btn-3d.active-tab {
-            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-        }
-
-        /* 3D Card Styles - Futuristic */
-        .card-3d {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 
-                0 20px 25px -5px rgba(0, 0, 0, 0.05), 
-                0 8px 10px -6px rgba(0, 0, 0, 0.01),
-                0 -4px 0 0 rgba(0,0,0,0.02) inset; /* Top highlight */
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border: 1px solid rgba(255,255,255,0.8);
-        }
-        .card-3d:hover {
-            transform: translateY(-8px) scale(1.01);
-            box-shadow: 
-                0 25px 50px -12px rgba(79, 70, 229, 0.15), 
-                0 0 0 1px rgba(79, 70, 229, 0.1);
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        /* Google Brand Colors Text */
+        /* Google Brand Colors */
         .text-g-blue { color: #4285F4; }
         .text-g-red { color: #EA4335; }
         .text-g-yellow { color: #FBBC05; }
         .text-g-green { color: #34A853; }
 
-        /* Scrollbar */
-        .table-container::-webkit-scrollbar { height: 8px; width: 8px; }
-        .table-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        /* Nav Buttons */
+        .nav-btn {
+            background: linear-gradient(90deg, #4f46e5 0%, #4338ca 100%);
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        }
+        .nav-btn.inactive {
+            background: transparent;
+            box-shadow: none;
+            color: #9ca3af;
+        }
+        .nav-btn.inactive:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            transform: none;
+        }
+
+        /* Stats Card */
+        .stats-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            border-bottom-width: 4px;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Border Colors */
+        .border-blue-b { border-bottom-color: #3b82f6; }
+        .border-green-b { border-bottom-color: #22c55e; }
+        .border-yellow-b { border-bottom-color: #eab308; }
+        .border-red-b { border-bottom-color: #ef4444; }
+
+        /* Custom Table */
+        .custom-table th {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            background-color: #f9fafb;
+            padding: 1rem;
+        }
+        .custom-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .custom-table tr:hover td {
+            background-color: #f9fafb;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="text-gray-800 h-screen overflow-hidden flex selection:bg-indigo-100 selection:text-indigo-700">
+<body class="h-screen flex overflow-hidden text-gray-800">
 
     <!-- Sidebar -->
-    <aside class="bg-slate-900 text-white w-72 flex-shrink-0 flex flex-col z-30 shadow-2xl relative hidden md:flex">
-        <!-- Google Tone Logo -->
-        <div class="p-8 flex items-center justify-center border-b border-slate-800/50 bg-slate-950/30">
-            <div class="flex items-center space-x-3 bg-white px-4 py-2 rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
-                <span class="text-3xl font-extrabold tracking-tight">
-                    <span class="text-g-blue">G</span><span class="text-g-red">.</span><span class="text-g-yellow">S</span><span class="text-g-blue">.</span><span class="text-g-green">D</span>
+    <aside class="w-72 sidebar-bg flex flex-col flex-shrink-0 z-20 hidden md:flex shadow-2xl">
+        <!-- Logo Area -->
+        <div class="p-8 pb-4">
+            <div class="py-3 px-6 flex items-center justify-center transform hover:scale-105 transition-transform duration-300">
+                <span class="text-4xl font-extrabold tracking-tight drop-shadow-lg">
+                    <span class="text-g-blue">G</span><span class="text-g-red">.</span><span class="text-g-yellow">S</span><span class="text-g-blue">.</span><span class="text-g-green">A</span>
                 </span>
             </div>
+            <p class="text-gray-500 text-[10px] uppercase font-bold tracking-widest mt-6 mb-2 pl-2">Main Menu</p>
         </div>
-        
-        <nav class="flex-1 px-6 py-8 space-y-6">
-            <div>
-                <p class="text-xs text-slate-400 uppercase font-bold mb-4 tracking-widest px-2">Main Menu</p>
-                <button onclick="switchView('dashboard')" id="nav-dashboard" class="btn-3d w-full flex items-center space-x-4 px-6 py-4 bg-indigo-600 rounded-2xl text-white font-semibold mb-4 group overflow-hidden">
-                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-20 transition-opacity"></div>
-                    <i class="fa-solid fa-chart-pie text-xl relative z-10 group-hover:scale-110 transition-transform duration-300"></i>
-                    <span class="relative z-10">Dashboard</span>
-                </button>
-                <button onclick="switchView('directory')" id="nav-directory" class="btn-3d w-full flex items-center space-x-4 px-6 py-4 bg-indigo-600 rounded-2xl text-white font-semibold group overflow-hidden">
-                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-20 transition-opacity"></div>
-                    <i class="fa-solid fa-address-book text-xl relative z-10 group-hover:scale-110 transition-transform duration-300"></i>
-                    <span class="relative z-10">Student Directory</span>
-                </button>
-            </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-5 space-y-4">
+            <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-5 py-4 rounded-xl text-white font-medium text-left">
+                <i class="fa-solid fa-chart-pie w-5 text-lg"></i>
+                <span>Dashboard</span>
+            </button>
+            <button onclick="switchView('directory')" id="nav-directory" class="nav-btn inactive w-full flex items-center space-x-3 px-5 py-4 rounded-xl font-medium text-left">
+                <i class="fa-solid fa-address-book w-5 text-lg"></i>
+                <span>Student Directory</span>
+            </button>
         </nav>
         
-        <!-- Bottom Abstract Graphic -->
-        <div class="h-32 bg-gradient-to-t from-indigo-900/50 to-transparent pointer-events-none"></div>
+        <!-- Sidebar Footer -->
+        <div class="p-6">
+             <div class="bg-gray-800/60 rounded-xl p-4 border border-gray-700/50 backdrop-blur-sm">
+                 <div class="flex items-center space-x-2 justify-center mb-1">
+                     <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                     <p class="text-gray-400 text-xs">System Online</p>
+                 </div>
+                 <p class="text-gray-600 text-[10px] text-center">&copy; 2025 G.S.A Portal</p>
+             </div>
+        </div>
     </aside>
 
     <!-- Mobile Header -->
-    <div class="md:hidden fixed top-0 w-full bg-slate-900 text-white z-50 px-4 py-3 flex justify-between items-center shadow-md">
-        <span class="font-bold text-xl">
-            <span class="text-g-blue">G</span><span class="text-g-red">.</span><span class="text-g-yellow">S</span><span class="text-g-green">.D</span>
+    <div class="md:hidden fixed top-0 w-full sidebar-bg text-white z-50 px-4 py-3 flex justify-between items-center shadow-md">
+        <span class="font-extrabold text-xl">
+            <span class="text-g-blue">G</span><span class="text-g-red">.</span><span class="text-g-yellow">S</span><span class="text-g-green">.A</span>
         </span>
-        <button id="mobile-menu-btn" class="text-white focus:outline-none bg-slate-800 p-2 rounded-lg">
+        <button id="mobile-menu-btn" class="text-white p-2 bg-gray-800 rounded-lg">
             <i class="fa-solid fa-bars text-xl"></i>
         </button>
     </div>
 
-    <!-- Mobile Navigation Menu -->
-    <div id="mobile-nav" class="fixed inset-0 bg-slate-900 z-40 hidden flex-col pt-20 px-6 space-y-4 md:hidden backdrop-blur-xl bg-opacity-95">
-        <button onclick="switchView('dashboard'); toggleMobileMenu()" class="w-full text-left py-4 border-b border-slate-700 text-white font-bold text-lg">Dashboard</button>
-        <button onclick="switchView('directory'); toggleMobileMenu()" class="w-full text-left py-4 border-b border-slate-700 text-white font-bold text-lg">Student Directory</button>
+    <!-- Mobile Nav Overlay -->
+    <div id="mobile-nav" class="fixed inset-0 bg-gray-900/95 z-40 hidden flex-col pt-20 px-6 space-y-4 md:hidden backdrop-blur-sm">
+        <button onclick="switchView('dashboard'); toggleMobileMenu()" class="text-white text-lg font-bold py-4 border-b border-gray-700">Dashboard</button>
+        <button onclick="switchView('directory'); toggleMobileMenu()" class="text-white text-lg font-bold py-4 border-b border-gray-700">Student Directory</button>
     </div>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 p-4 md:p-8 overflow-y-auto mt-14 md:mt-0 relative">
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto p-4 md:p-8 pt-20 md:pt-8 relative">
         
         <!-- DASHBOARD VIEW -->
-        <div id="dashboard-view" class="animate-fade-in max-w-7xl mx-auto">
-            <header class="mb-10 flex justify-between items-end">
-                <div>
-                    <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 tracking-tight">Dashboard</h1>
-                    <p class="text-slate-500 mt-2 font-medium text-lg">Overview of student performance & metrics.</p>
-                </div>
+        <div id="dashboard-view" class="max-w-7xl mx-auto animate-fade-in">
+            <header class="mb-8">
+                <h1 class="text-3xl font-extrabold text-gray-800">Dashboard</h1>
+                <p class="text-gray-500 mt-1">Real-time overview of student performance & metrics.</p>
             </header>
 
-            <!-- 3D Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
-                <!-- Total Students -->
-                <div class="card-3d p-6 relative overflow-hidden group border-b-4 border-b-blue-500">
-                    <div class="absolute -right-6 -top-6 w-32 h-32 bg-blue-50 rounded-full opacity-50 group-hover:scale-125 transition-transform duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-4 shadow-sm group-hover:rotate-12 transition-transform">
-                            <i class="fa-solid fa-users text-2xl"></i>
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Total -->
+                <div class="stats-card p-6 border-blue-b">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 mb-4">
+                                <i class="fa-solid fa-users text-xl"></i>
+                            </div>
+                            <h2 class="text-4xl font-extrabold text-gray-800" id="total-students">62</h2>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Total Students</p>
                         </div>
-                        <h3 class="text-5xl font-extrabold text-slate-800 tracking-tighter" id="total-students">0</h3>
-                        <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mt-2">Total Students</p>
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full opacity-50"></div>
                     </div>
                 </div>
 
-                <!-- CSE Count -->
-                <div class="card-3d p-6 relative overflow-hidden group border-b-4 border-b-green-500">
-                    <div class="absolute -right-6 -top-6 w-32 h-32 bg-green-50 rounded-full opacity-50 group-hover:scale-125 transition-transform duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 mb-4 shadow-sm group-hover:rotate-12 transition-transform">
-                            <i class="fa-solid fa-code text-2xl"></i>
+                <!-- CSE -->
+                <div class="stats-card p-6 border-green-b">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center text-green-600 mb-4">
+                                <i class="fa-solid fa-code text-xl"></i>
+                            </div>
+                            <h2 class="text-4xl font-extrabold text-gray-800" id="cse-count">0</h2>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">CSE Dept</p>
                         </div>
-                        <h3 class="text-5xl font-extrabold text-slate-800 tracking-tighter" id="cse-count">0</h3>
-                        <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mt-2">CSE Dept</p>
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-green-50 rounded-full opacity-50"></div>
                     </div>
                 </div>
 
-                <!-- BCA Count -->
-                <div class="card-3d p-6 relative overflow-hidden group border-b-4 border-b-yellow-400">
-                    <div class="absolute -right-6 -top-6 w-32 h-32 bg-yellow-50 rounded-full opacity-50 group-hover:scale-125 transition-transform duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-14 h-14 bg-yellow-100 rounded-2xl flex items-center justify-center text-yellow-600 mb-4 shadow-sm group-hover:rotate-12 transition-transform">
-                            <i class="fa-solid fa-laptop-code text-2xl"></i>
+                <!-- BCA -->
+                <div class="stats-card p-6 border-yellow-b">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-yellow-50 flex items-center justify-center text-yellow-600 mb-4">
+                                <i class="fa-solid fa-laptop-code text-xl"></i>
+                            </div>
+                            <h2 class="text-4xl font-extrabold text-gray-800" id="bca-count">0</h2>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">BCA Dept</p>
                         </div>
-                        <h3 class="text-5xl font-extrabold text-slate-800 tracking-tighter" id="bca-count">0</h3>
-                        <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mt-2">BCA Dept</p>
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-yellow-50 rounded-full opacity-50"></div>
                     </div>
                 </div>
 
                 <!-- Batches -->
-                <div class="card-3d p-6 relative overflow-hidden group border-b-4 border-b-red-500">
-                    <div class="absolute -right-6 -top-6 w-32 h-32 bg-red-50 rounded-full opacity-50 group-hover:scale-125 transition-transform duration-500"></div>
-                    <div class="relative z-10">
-                        <div class="w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center text-red-600 mb-4 shadow-sm group-hover:rotate-12 transition-transform">
-                            <i class="fa-solid fa-layer-group text-2xl"></i>
+                <div class="stats-card p-6 border-red-b">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center text-red-600 mb-4">
+                                <i class="fa-solid fa-layer-group text-xl"></i>
+                            </div>
+                            <h2 class="text-4xl font-extrabold text-gray-800">5</h2>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Active Batches</p>
                         </div>
-                        <h3 class="text-5xl font-extrabold text-slate-800 tracking-tighter">5</h3>
-                        <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mt-2">Active Batches</p>
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-red-50 rounded-full opacity-50"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- 3D Chart Section -->
-            <div class="card-3d p-8 mb-8 glass-panel">
-                <div class="flex flex-col md:flex-row justify-between items-center mb-8">
-                    <h2 class="text-2xl font-bold text-slate-800">Student Distribution</h2>
-                    <div class="flex space-x-4 mt-4 md:mt-0 bg-slate-100 p-2 rounded-xl">
-                        <div class="flex items-center space-x-2 px-3">
-                            <span class="w-3 h-3 rounded-full bg-blue-500 shadow-sm"></span><span class="text-sm font-semibold text-slate-600">CSE</span>
-                        </div>
-                        <div class="flex items-center space-x-2 px-3 border-l border-slate-200">
-                            <span class="w-3 h-3 rounded-full bg-yellow-400 shadow-sm"></span><span class="text-sm font-semibold text-slate-600">BCA</span>
-                        </div>
+            <!-- Chart Section -->
+            <div class="bg-white rounded-2xl shadow-sm p-8 mb-8 border border-gray-100">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">Student Distribution</h3>
+                    <div class="flex space-x-3 mt-4 md:mt-0">
+                        <span class="flex items-center text-xs font-bold text-gray-500 bg-gray-50 px-3 py-1 rounded-full"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 mr-2"></span> CSE</span>
+                        <span class="flex items-center text-xs font-bold text-gray-500 bg-gray-50 px-3 py-1 rounded-full"><span class="w-2.5 h-2.5 rounded-full bg-yellow-400 mr-2"></span> BCA</span>
                     </div>
                 </div>
-                <div class="relative h-80 md:h-[400px] w-full">
+                <div class="h-80 w-full">
                     <canvas id="studentChart"></canvas>
                 </div>
             </div>
         </div>
 
         <!-- DIRECTORY VIEW -->
-        <div id="directory-view" class="hidden animate-fade-in max-w-7xl mx-auto h-[calc(100vh-100px)] flex flex-col">
+        <div id="directory-view" class="hidden max-w-7xl mx-auto h-full flex flex-col animate-fade-in">
             <header class="mb-6 flex-shrink-0">
-                <h1 class="text-4xl font-extrabold text-slate-800 tracking-tight">Student Directory</h1>
+                <h1 class="text-3xl font-extrabold text-gray-800">Student Directory</h1>
+                <p class="text-gray-500 mt-1">Complete list of registered students from PDF records.</p>
             </header>
 
-            <div class="card-3d overflow-hidden flex flex-col flex-1 border-0 shadow-2xl bg-white/80 backdrop-blur-md">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 flex flex-col overflow-hidden">
                 <!-- Toolbar -->
-                <div class="p-6 border-b border-slate-100 bg-white flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm z-10">
-                    <div class="flex items-center space-x-3">
-                         <div class="bg-indigo-50 text-indigo-700 px-4 py-2 rounded-lg font-bold text-sm border border-indigo-100">
-                            Total Records: <span id="total-records-badge" class="text-indigo-900 ml-1 text-lg">0</span>
-                         </div>
+                <div class="p-5 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 bg-gray-50/30">
+                    <div class="flex items-center space-x-2">
+                         <span class="bg-indigo-50 px-4 py-1.5 rounded-lg border border-indigo-100 text-xs font-bold text-indigo-700 uppercase tracking-wide">
+                            Total Records: <span id="total-records-badge" class="ml-1 text-sm">62</span>
+                         </span>
                     </div>
                     
-                    <!-- 3D Search Input -->
-                    <div class="relative w-full md:w-96 group">
-                        <input type="text" id="searchInput" placeholder="Search by Name, Roll No or Branch..." 
-                               class="w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-200 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50/50 transition-all font-medium text-slate-700 placeholder-slate-400">
-                        <i class="fa-solid fa-search absolute left-4 top-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors text-lg"></i>
+                    <div class="relative w-full md:w-96">
+                        <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-gray-400 text-sm"></i>
+                        <input type="text" id="searchInput" placeholder="Search by name, roll no or branch..." class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm bg-white shadow-sm transition-all">
                     </div>
                 </div>
 
-                <!-- Table Header (Sticky) -->
-                <div class="bg-slate-50 border-b border-slate-200 px-4">
-                    <div class="grid grid-cols-12 gap-4 py-4 px-2">
-                        <div class="col-span-4 text-xs font-bold tracking-wider text-slate-500 uppercase pl-4">Student Name</div>
-                        <div class="col-span-3 text-xs font-bold tracking-wider text-slate-500 uppercase">Roll Number</div>
-                        <div class="col-span-2 text-xs font-bold tracking-wider text-slate-500 uppercase">Branch</div>
-                        <div class="col-span-3 text-xs font-bold tracking-wider text-slate-500 uppercase">Contact Details</div>
-                    </div>
+                <!-- Table Container -->
+                <div class="flex-1 overflow-auto">
+                    <table class="w-full text-left border-collapse custom-table">
+                        <thead class="sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th width="35%">Student Profile</th>
+                                <th width="15%">Roll No</th>
+                                <th width="20%">Branch / Sem</th>
+                                <th width="30%">Contact</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- JS Populates this -->
+                        </tbody>
+                    </table>
                 </div>
-
-                <!-- Scrollable List Container -->
-                <div class="flex-1 overflow-auto table-container bg-white relative px-4 pb-4">
-                    <div id="student-list-container" class="space-y-2 mt-2">
-                        <!-- JS populates rows here -->
-                    </div>
+                
+                <div id="no-results" class="hidden p-12 text-center text-gray-400">
+                    <i class="fa-regular fa-folder-open text-4xl mb-3 opacity-50"></i>
+                    <p class="mt-2 font-medium">No students found matching your search.</p>
                 </div>
             </div>
         </div>
-
     </main>
 
-    <!-- JavaScript Logic -->
+    <!-- JS Logic -->
     <script>
         // --- View Switching Logic ---
         function switchView(viewName) {
-            document.getElementById('dashboard-view').classList.add('hidden');
-            document.getElementById('directory-view').classList.add('hidden');
-            document.getElementById('nav-dashboard').classList.remove('active-tab');
-            document.getElementById('nav-directory').classList.remove('active-tab');
+            const dashboard = document.getElementById('dashboard-view');
+            const directory = document.getElementById('directory-view');
+            const btnDash = document.getElementById('nav-dashboard');
+            const btnDir = document.getElementById('nav-directory');
 
-            const selectedView = document.getElementById(viewName + '-view');
-            selectedView.classList.remove('hidden');
-            selectedView.classList.remove('animate-fade-in');
-            void selectedView.offsetWidth; // trigger reflow
-            selectedView.classList.add('animate-fade-in');
-            document.getElementById('nav-' + viewName).classList.add('active-tab');
+            dashboard.classList.add('hidden');
+            directory.classList.add('hidden');
+            
+            btnDash.classList.add('inactive');
+            btnDir.classList.add('inactive');
+
+            if (viewName === 'dashboard') {
+                dashboard.classList.remove('hidden');
+                btnDash.classList.remove('inactive');
+            } else {
+                directory.classList.remove('hidden');
+                btnDir.classList.remove('inactive');
+            }
         }
 
         function toggleMobileMenu() {
-            document.getElementById('mobile-nav').classList.toggle('hidden');
-            document.getElementById('mobile-nav').classList.toggle('flex');
+            const menu = document.getElementById('mobile-nav');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
         }
         document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
 
-        // --- Data ---
+        // --- Data: 62 Students (Exact from PDF) ---
         const students = [
-            { name: "Anushka Jha", roll: "12464", branch: "CSE", sem: "3rd Sem", email: "anushka.jha1705@gmail.com", phone: "7633979154" },
-            { name: "Aparna Kumari", roll: "12463", branch: "CSE", sem: "3rd Sem", email: "kaparna767@gmail.com", phone: "9153681400" },
+            // Page 1
             { name: "Kumar Priyam", roll: "12422", branch: "CSE", sem: "3rd Sem", email: "priyamlapy9@gmail.com", phone: "7903906461" },
             { name: "Vivek Kumar Sah", roll: "12458", branch: "CSE", sem: "3rd Sem", email: "studevivek2004@gmail.com", phone: "9570666092" },
+            { name: "Aparna Kumari", roll: "12463", branch: "CSE", sem: "3rd Sem", email: "kaparna767@gmail.com", phone: "9153681400" },
+            { name: "Anushka Jha", roll: "12464", branch: "CSE", sem: "3rd Sem", email: "anushka.jha1705@gmail.com", phone: "7633979154" },
             { name: "Aditya Kumar Raj", roll: "12514", branch: "CSE", sem: "1st Sem", email: "aditya1852005@gmail.com", phone: "968020248" },
             { name: "Rahul Kumar", roll: "12526", branch: "CSE", sem: "1st Sem", email: "rahul9128703420@gmail.com", phone: "9128703420" },
             { name: "Ankit Kumar", roll: "12530", branch: "CSE", sem: "1st Sem", email: "ankit95071kumar2008@gmail.com", phone: "9234990891" },
@@ -309,6 +367,7 @@
             { name: "Komal Kumari", roll: "12562", branch: "CSE", sem: "1st Sem", email: "komalkumari.singh741@gmail.com", phone: "7633017976" },
             { name: "Anubhav Kumar", roll: "12570", branch: "CSE", sem: "1st Sem", email: "brandedanshu@gmail.com", phone: "7479822720" },
             { name: "Jay Kumar", roll: "824082", branch: "BCA", sem: "3rd Sem", email: "jayadav@gmail.com", phone: "9570871346" },
+            // Page 2
             { name: "Sakshi Kumari", roll: "824185", branch: "BCA", sem: "3rd Sem", email: "adorablesakshi0007@gmail.com", phone: "8809733546" },
             { name: "Hasan Raja", roll: "825083", branch: "BCA", sem: "1st Sem", email: "hassan8825083@gmail.com", phone: "9939247792" },
             { name: "Kinshu Kumar", roll: "825094", branch: "BCA", sem: "1st Sem", email: "xaekks@gmail.com", phone: "8809097140" },
@@ -329,165 +388,141 @@
             { name: "Pratibha Roy", roll: "825091", branch: "BCA", sem: "1st Sem", email: "raypratibha45@gmail.com", phone: "6299271296" },
             { name: "Sujal Kumar", roll: "12559", branch: "CSE", sem: "1st Sem", email: "anshu0101roy@gmail.com", phone: "9631982209" },
             { name: "Manjesh Kumar", roll: "12542", branch: "CSE", sem: "1st Sem", email: "Manjeshroy987@gmail.com", phone: "7549489579" },
+            // Page 3
             { name: "Rishabh Singh", roll: "823051", branch: "BCA", sem: "5th Sem", email: "rishabhsingh8409@gmail.com", phone: "8340555204" },
             { name: "Snigdha Singh", roll: "12447", branch: "CSE", sem: "3rd Sem", email: "snigdhasingh879@gmail.com", phone: "8299420617" },
             { name: "Neha Kumari", roll: "825099", branch: "BCA", sem: "1st Sem", email: "nehakumari471650@gmail.com", phone: "9279997018" },
             { name: "Doli Kumari", roll: "12453", branch: "CSE", sem: "3rd Sem", email: "dolikumari5135@gmail.com", phone: "6299799194" },
-            { name: "Shubham Kumar", roll: "12442", branch: "BCA", sem: "3rd Sem", email: "shub90294@gmail.com", phone: "6205048505" },
+            { name: "Shubham Kumar", roll: "12442", branch: "CSE", sem: "3rd Sem", email: "shub90294@gmail.com", phone: "6205048505" },
             { name: "Kunal Kumar Singh", roll: "12501", branch: "CSE", sem: "1st Sem", email: "kunalkumarsingh930@gmail.com", phone: "-" },
             { name: "Karam Kumar Singh", roll: "12518", branch: "CSE", sem: "1st Sem", email: "karamkyp612@gmail.com", phone: "-" },
-            { name: "Ravi Shankar Priyadarsh", roll: "12522", branch: "CSE", sem: "1st Sem", email: "nami912344@gmail.com", phone: "-" },
+            { name: "Ravi Shankar Priyadarshi", roll: "12522", branch: "CSE", sem: "1st Sem", email: "nami912344@gmail.com", phone: "-" },
             { name: "Palash Karar", roll: "12527", branch: "CSE", sem: "1st Sem", email: "palashkarar80@gmail.com", phone: "-" },
             { name: "Rahul Kumar", roll: "12538", branch: "CSE", sem: "1st Sem", email: "rahulkumarto9262584906@gmail.com", phone: "-" },
             { name: "Aditya Raj", roll: "12540", branch: "CSE", sem: "1st Sem", email: "novawuther@gmail.com", phone: "9801365390" },
+            { name: "Manjesh Kumar", roll: "12542", branch: "CSE", sem: "1st Sem", email: "manjeshroy987@gmail.com", phone: "-" },
             { name: "Manish Kumar", roll: "12543", branch: "CSE", sem: "1st Sem", email: "tsmanish08@gmail.com", phone: "8969502006" },
             { name: "Soni Kumari", roll: "12552", branch: "CSE", sem: "1st Sem", email: "kumarisoni57884@gmail.com", phone: "9508572481" },
             { name: "Chandan Karmkar", roll: "825014", branch: "BCA", sem: "1st Sem", email: "chandan.karmkar014@gmail.com", phone: "6206170952" },
             { name: "Saddam Husein", roll: "825084", branch: "BCA", sem: "1st Sem", email: "saddamhusen57342@gmail.com", phone: "9102220049" },
             { name: "Bhavesh kumar", roll: "825029", branch: "BCA", sem: "1st Sem", email: "bhavesh754993@gmail.com", phone: "7549915471" },
             { name: "Gitanjali kumarl", roll: "825188", branch: "BCA", sem: "1st Sem", email: "gk2006.in@gmail.com", phone: "7903938902" },
+            { name: "Soni Kumari", roll: "12552", branch: "CSE", sem: "1st Sem", email: "kumarisoni57884@gmail.com", phone: "9508572481" },
             { name: "Divya Singh", roll: "12573", branch: "CSE", sem: "1st Sem", email: "divyasinghk4@gmail.com", phone: "9905446912" },
+            // Page 4
             { name: "Prerana Das", roll: "825049", branch: "CSE", sem: "1st Sem", email: "preranadas52@gmail.com", phone: "6299737505" },
             { name: "Alen Sunny", roll: "825086", branch: "BCA", sem: "1st Sem", email: "alensunny0077@gmail.com", phone: "7979840793" },
-            { name: "Masoom Raza", roll: "825086", branch: "BCA", sem: "1st Sem", email: "alensunny0077@gmail.com", phone: "7979840793" },
-            { name: "Soni Kumari", roll: "12552", branch: "CSE", sem: "1st Sem", email: "kumarisoni57884@gmail.com", phone: "9508572481" }
+            { name: "Masoom Raza", roll: "825086", branch: "BCA", sem: "1st Sem", email: "alensunny0077@gmail.com", phone: "7979840793" }
         ];
 
-        // --- Init Stats ---
-        const totalStudents = 62;
-        const cseStudents = students.filter(s => s.branch.toUpperCase() === 'CSE').length;
-        const bcaStudents = students.filter(s => s.branch.toUpperCase() === 'BCA').length;
-        
-        document.getElementById('total-students').textContent = totalStudents;
-        document.getElementById('cse-count').textContent = cseStudents;
-        document.getElementById('bca-count').textContent = bcaStudents;
-        document.getElementById('total-records-badge').textContent = totalStudents;
+        // Stats Update
+        document.getElementById('total-students').textContent = students.length;
+        document.getElementById('total-records-badge').textContent = students.length;
+        document.getElementById('cse-count').textContent = students.filter(s => s.branch === 'CSE').length;
+        document.getElementById('bca-count').textContent = students.filter(s => s.branch === 'BCA').length;
 
-        // --- Render List (PDF Style) ---
-        const container = document.getElementById('student-list-container');
+        // Render Table
+        const tableBody = document.getElementById('tableBody');
+        const noResults = document.getElementById('no-results');
         const searchInput = document.getElementById('searchInput');
 
-        function renderList(data) {
-            container.innerHTML = '';
+        function renderTable(data) {
+            tableBody.innerHTML = '';
             
             if (data.length === 0) {
-                container.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-12 text-slate-400">
-                        <i class="fa-regular fa-folder-open text-4xl mb-3 opacity-50"></i>
-                        <p class="text-sm font-medium">No records found matching your criteria.</p>
-                    </div>`;
+                noResults.classList.remove('hidden');
                 return;
+            } else {
+                noResults.classList.add('hidden');
             }
 
-            data.forEach((student, index) => {
-                const row = document.createElement('div');
-                row.className = "grid grid-cols-12 gap-4 items-center p-3 bg-white hover:bg-slate-50 border border-slate-100 rounded-lg shadow-sm transition-all hover:shadow-md hover:border-indigo-200 group";
-                row.style.animationDelay = `${index * 30}ms`;
-                row.classList.add('animate-fade-in'); // simple entrance animation
+            data.forEach(student => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 transition-colors";
                 
-                let branchColor = student.branch.toUpperCase() === 'CSE' ? 'text-blue-600 bg-blue-50' : 'text-yellow-600 bg-yellow-50';
+                // Avatar Color Logic
+                const isCSE = student.branch === 'CSE';
+                const avatarBg = isCSE ? 'bg-blue-100 text-blue-600' : 'bg-yellow-100 text-yellow-600';
+                const badgeBg = isCSE ? 'bg-blue-50 text-blue-700' : 'bg-yellow-50 text-yellow-700';
 
-                row.innerHTML = `
-                    <div class="col-span-4 flex items-center pl-2">
-                        <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600 mr-3 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                            ${index + 1}
+                tr.innerHTML = `
+                    <td>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full ${avatarBg} flex items-center justify-center text-sm font-bold">
+                                ${student.name.substring(0,2).toUpperCase()}
+                            </div>
+                            <div>
+                                <div class="font-bold text-gray-800 text-sm">${student.name}</div>
+                                <div class="text-[10px] text-gray-400 uppercase tracking-wide">Student</div>
+                            </div>
                         </div>
-                        <div class="font-semibold text-slate-800 text-sm group-hover:text-indigo-700 transition-colors">${student.name}</div>
-                    </div>
-                    <div class="col-span-3 text-sm text-slate-600 font-mono tracking-tight">${student.roll}</div>
-                    <div class="col-span-2">
-                        <span class="px-2 py-1 rounded text-xs font-bold uppercase tracking-wide ${branchColor}">
+                    </td>
+                    <td class="text-sm font-mono text-gray-600">${student.roll}</td>
+                    <td>
+                        <span class="px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide ${badgeBg}">
                             ${student.branch} - ${student.sem.split(' ')[0]}
                         </span>
-                    </div>
-                    <div class="col-span-3 text-xs text-slate-500">
-                         <div class="flex items-center space-x-2 truncate mb-1">
-                             <i class="fa-regular fa-envelope w-4 text-center"></i>
-                             <span class="truncate" title="${student.email}">${student.email}</span>
-                         </div>
-                         <div class="flex items-center space-x-2 truncate">
-                             <i class="fa-solid fa-phone w-4 text-center"></i>
-                             <span>${student.phone}</span>
-                         </div>
-                    </div>
+                    </td>
+                    <td>
+                        <div class="flex flex-col space-y-1 text-xs text-gray-500">
+                             <div class="flex items-center space-x-2">
+                                <i class="fa-regular fa-envelope w-4"></i>
+                                <span>${student.email}</span>
+                             </div>
+                             <div class="flex items-center space-x-2">
+                                <i class="fa-solid fa-phone w-4"></i>
+                                <span>${student.phone}</span>
+                             </div>
+                        </div>
+                    </td>
                 `;
-                container.appendChild(row);
+                tableBody.appendChild(tr);
             });
         }
 
-        renderList(students);
+        renderTable(students);
 
-        // Search
+        // Search Logic
         searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const filteredData = students.filter(student => 
-                student.name.toLowerCase().includes(searchTerm) || 
-                student.roll.includes(searchTerm) ||
-                student.branch.toLowerCase().includes(searchTerm)
+            const term = e.target.value.toLowerCase();
+            const filtered = students.filter(s => 
+                s.name.toLowerCase().includes(term) || 
+                s.roll.includes(term) || 
+                s.branch.toLowerCase().includes(term)
             );
-            renderList(filteredData);
+            renderTable(filtered);
         });
 
-        // --- Chart ---
+        // Chart
+        const ctx = document.getElementById('studentChart').getContext('2d');
         const bca1 = students.filter(s => s.branch === 'BCA' && s.sem === '1st Sem').length;
         const bca3 = students.filter(s => s.branch === 'BCA' && s.sem === '3rd Sem').length;
         const bca5 = students.filter(s => s.branch === 'BCA' && s.sem === '5th Sem').length;
         const cse1 = students.filter(s => s.branch === 'CSE' && s.sem === '1st Sem').length;
         const cse3 = students.filter(s => s.branch === 'CSE' && s.sem === '3rd Sem').length;
 
-        const ctx = document.getElementById('studentChart').getContext('2d');
-        const studentChart = new Chart(ctx, {
+        new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['BCA 1st', 'BCA 3rd', 'BCA 5th', 'CSE 1st', 'CSE 3rd'],
                 datasets: [{
                     label: 'Students',
                     data: [bca1, bca3, bca5, cse1, cse3],
-                    backgroundColor: [
-                        '#FACC15', // BCA Yellow
-                        '#EAB308',
-                        '#CA8A04',
-                        '#3B82F6', // CSE Blue
-                        '#2563EB'
-                    ],
+                    backgroundColor: ['#FACC15', '#EAB308', '#CA8A04', '#3B82F6', '#2563EB'],
                     borderRadius: 8,
-                    borderSkipped: false,
-                    barThickness: 40,
+                    barThickness: 40
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: '#1e293b',
-                        padding: 12,
-                        cornerRadius: 8,
-                        titleFont: { family: 'Poppins', size: 14 },
-                        bodyFont: { family: 'Poppins', size: 12 }
-                    }
-                },
+                plugins: { legend: { display: false } },
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { display: true, color: '#f1f5f9' },
-                        border: { display: false }
-                    },
-                    x: {
-                        grid: { display: false },
-                        border: { display: false }
-                    }
-                },
-                animation: {
-                    duration: 1500,
-                    easing: 'easeOutQuart'
+                    y: { beginAtZero: true, grid: { color: '#f3f4f6' }, border: { display: false } },
+                    x: { grid: { display: false }, border: { display: false } }
                 }
             }
         });
-
-        // Initialize with dashboard active
-        switchView('dashboard');
     </script>
 </body>
 </html>
