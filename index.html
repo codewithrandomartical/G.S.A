@@ -11,7 +11,7 @@
     <meta name="author" content="Student Community Core ( VVIT ) Technical Team">
     <meta name="robots" content="index, follow">
 
-    <!-- ✅ Open Graph (Facebook, WhatsApp, LinkedIn) – same preview -->
+    <!-- ✅ Open Graph -->
     <meta property="og:site_name" content="Student Community Core ( VVIT )">
     <meta property="og:title" content="Student Community Core ( VVIT ) | Official Dashboard">
     <meta property="og:description" content="Access live student records, department analytics, active batches and the complete directory of CSE & BCA students through the official Student Community Core ( VVIT ) portal.">
@@ -19,10 +19,10 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:type" content="image/png">
-    <meta property="og:url" content="https://gsa-vvit.vercel.app">
+    <meta property="og:url" content="https://gsa-portal.web.app">
     <meta property="og:type" content="website">
 
-    <!-- ✅ Twitter Card – same preview -->
+    <!-- ✅ Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Student Community Core ( VVIT ) | Student Dashboard">
     <meta name="twitter:description" content="Official Student Community Core ( VVIT ) dashboard for student records, department analytics and batch management system.">
@@ -115,6 +115,7 @@
             background-color: #f9fafb;
         }
 
+        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -123,6 +124,7 @@
             animation: fadeIn 0.4s ease-out forwards;
         }
         
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
@@ -277,7 +279,7 @@
         <div id="directory-view" class="hidden max-w-7xl mx-auto h-full flex flex-col animate-fade-in">
             <header class="mb-4 sm:mb-6 flex-shrink-0">
                 <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-800">Student Directory</h1>
-                <p class="text-gray-500 mt-1 text-sm">Complete list of registered students (synced from Google Sheets).</p>
+                <p class="text-gray-500 mt-1 text-sm">Complete list of registered students from PDF records.</p>
             </header>
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 flex flex-col overflow-hidden">
@@ -327,12 +329,6 @@
 
     <!-- JS Logic -->
     <script>
-        // === CONFIG: API (serverless) ===
-        const STUDENT_API_URL = "/api/students"; // same-origin API
-
-        let students = [];
-        let chart = null;
-
         // --- Haptic helper ---
         function haptic(duration = 15) {
             if (navigator.vibrate) {
@@ -369,21 +365,85 @@
 
         document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
 
-        // --- UI helpers: stats, table, chart ---
+        // --- Data: from PDF (Anushka + Aparna fixed at top) ---
+        const students = [
+            // Top priority
+            { name: "Anushka Jha", roll: "12464", branch: "CSE", sem: "3rd Sem", email: "anushka.jha1705@gmail.com", phone: "7633979154" },
+            { name: "Aparna Kumari", roll: "12463", branch: "CSE", sem: "3rd Sem", email: "kaparna767@gmail.com", phone: "9153681400" },
+
+            // Rest from file
+            { name: "Kumar Priyam", roll: "12422", branch: "CSE", sem: "3rd Sem", email: "priyamlapy9@gmail.com", phone: "7903906461" },
+            { name: "Vivek Kumar Sah", roll: "12458", branch: "CSE", sem: "3rd Sem", email: "studevivek2004@gmail.com", phone: "9570666092" },
+            { name: "Aditya Kumar Raj", roll: "12514", branch: "CSE", sem: "1st Sem", email: "aditya1852005@gmail.com", phone: "968020248" },
+            { name: "Rahul Kumar", roll: "12526", branch: "CSE", sem: "1st Sem", email: "rahul9128703420@gmail.com", phone: "9128703420" },
+            { name: "Ankit Kumar", roll: "12530", branch: "CSE", sem: "1st Sem", email: "ankit95071kumar2008@gmail.com", phone: "9234990891" },
+            { name: "Shivam Kumar", roll: "12531", branch: "CSE", sem: "1st Sem", email: "shivamkeshri115@gmail.com", phone: "7488286721" },
+            { name: "Annu Kumari", roll: "12532", branch: "CSE", sem: "1st Sem", email: "annuy5900@gmail.com", phone: "9942352648" },
+            { name: "Abhinav Kumar", roll: "12534", branch: "CSE", sem: "1st Sem", email: "abhinavkumar61843@gmail.com", phone: "7717757595" },
+            { name: "Gunjan Raj", roll: "12535", branch: "CSE", sem: "1st Sem", email: "gunjanraj342@gmail.com", phone: "7050894244" },
+            { name: "Pranjal", roll: "12536", branch: "CSE", sem: "1st Sem", email: "pranjalambas@gmail.com", phone: "7482045124" },
+            { name: "Abhinav Singh", roll: "12541", branch: "CSE", sem: "1st Sem", email: "sonu647@gmail.com", phone: "9905739410" },
+            { name: "Shuti Shree", roll: "12547", branch: "CSE", sem: "1st Sem", email: "shreestuti6@gmail.com", phone: "9234202750" },
+            { name: "Tanishk Kumar", roll: "12550", branch: "CSE", sem: "1st Sem", email: "tanishkkumar444@gmail.com", phone: "9546834248" },
+            { name: "Tanisha Singh", roll: "12556", branch: "CSE", sem: "1st Sem", email: "tanishas11806@gmail.com", phone: "9608445232" },
+            { name: "Komal Kumari", roll: "12562", branch: "CSE", sem: "1st Sem", email: "komalkumari.singh741@gmail.com", phone: "7633017976" },
+            { name: "Anubhav Kumar", roll: "12570", branch: "CSE", sem: "1st Sem", email: "brandedanshu@gmail.com", phone: "7479822720" },
+            { name: "Jay Kumar", roll: "824082", branch: "BCA", sem: "3rd Sem", email: "jayadav@gmail.com", phone: "9570871346" },
+            { name: "Sakshi Kumari", roll: "824185", branch: "BCA", sem: "3rd Sem", email: "adorablesakshi0007@gmail.com", phone: "8809733546" },
+            { name: "Hasan Raja", roll: "825083", branch: "BCA", sem: "1st Sem", email: "hasan8825083@gmail.com", phone: "9939247792" },
+            { name: "Kinshu Kumar", roll: "825094", branch: "BCA", sem: "1st Sem", email: "xaekks@gmail.com", phone: "8809097140" },
+            { name: "Chhotu Kumar Sah", roll: "825149", branch: "BCA", sem: "1st Sem", email: "ck0570916@gmail.com", phone: "7061718681" },
+            { name: "Aditya Raj Mishra", roll: "825127", branch: "BCA", sem: "1st Sem", email: "aadimishra401@gmail.com", phone: "8252050651" },
+            { name: "Harshit Kumar", roll: "825139", branch: "BCA", sem: "1st Sem", email: "harshit7903390@gmail.com", phone: "7903422403" },
+            { name: "Shivam Kumar", roll: "12508", branch: "BCA", sem: "1st Sem", email: "sk7832586@gmail.com", phone: "7209443189" },
+            { name: "Shourabhi Das", roll: "825009", branch: "BCA", sem: "1st Sem", email: "Shourabhidas@gmail.com", phone: "6200472942" },
+            { name: "Aditya Kumar", roll: "825194", branch: "BCA", sem: "1st Sem", email: "adityak8709@gmail.com", phone: "8051283518" },
+            { name: "Prerna Sinha", roll: "12571", branch: "CSE", sem: "1st Sem", email: "prernasinha4242@gmail.com", phone: "9905186735" },
+            { name: "Sijal Jawed", roll: "825045", branch: "BCA", sem: "1st Sem", email: "sijaljawed@gmail.com", phone: "6206779353" },
+            { name: "Roshni Kumari", roll: "825005", branch: "BCA", sem: "1st Sem", email: "kumariroshni1056@gmail.com", phone: "7631062828" },
+            { name: "Rashid Ali", roll: "825052", branch: "BCA", sem: "1st Sem", email: "rashid07raj@gmail.com", phone: "8051127184" },
+            { name: "Ajit Kumar Jha", roll: "825028", branch: "BCA", sem: "1st Sem", email: "ajitkumarjha5582@gmail.com", phone: "9122991302" },
+            { name: "Karan Anand", roll: "825035", branch: "BCA", sem: "1st Sem", email: "anandkaran46@gmail.com", phone: "7061051612" },
+            { name: "Ranjan Kumar", roll: "825135", branch: "BCA", sem: "1st Sem", email: "abhaykanth68@gmail.com", phone: "7479781846" },
+            { name: "Arpit Aryan", roll: "825041", branch: "BCA", sem: "1st Sem", email: "arpitaryan0226@gmail.co", phone: "9204327704" },
+            { name: "Pratibha Roy", roll: "825091", branch: "BCA", sem: "1st Sem", email: "raypratibha45@gmail.com", phone: "6299271296" },
+            { name: "Sujal Kumar", roll: "12559", branch: "CSE", sem: "1st Sem", email: "anshu0101roy@gmail.com", phone: "9631982209" },
+            { name: "Manjesh Kumar", roll: "12542", branch: "CSE", sem: "1st Sem", email: "Manjeshroy987@gmail.com", phone: "7549489579" },
+            { name: "Rishabh Singh", roll: "823051", branch: "BCA", sem: "5th Sem", email: "rishabhsingh8409@gmail.com", phone: "8340555204" },
+            { name: "Snigdha Singh", roll: "12447", branch: "CSE", sem: "3rd Sem", email: "snigdhasingh879@gmail.com", phone: "8299420617" },
+            { name: "Neha Kumari", roll: "825099", branch: "BCA", sem: "1st Sem", email: "nehakumari471650@gmail.com", phone: "9279997018" },
+            { name: "Doli Kumari", roll: "12453", branch: "CSE", sem: "3rd Sem", email: "dolikumari5135@gmail.com", phone: "6299799194" },
+            { name: "Shubham Kumar", roll: "12442", branch: "CSE", sem: "3rd Sem", email: "shub90294@gmail.com", phone: "6205048505" },
+            { name: "Kunal Kumar Singh", roll: "12501", branch: "CSE", sem: "1st Sem", email: "kunalkumarsingh930@gmail.com", phone: "-" },
+            { name: "Karam Kumar Singh", roll: "12518", branch: "CSE", sem: "1st Sem", email: "karamkyp612@gmail.com", phone: "-" },
+            { name: "Ravi Shankar Priyadarshi", roll: "12522", branch: "CSE", sem: "1st Sem", email: "nami912344@gmail.com", phone: "-" },
+            { name: "Palash Karar", roll: "12527", branch: "CSE", sem: "1st Sem", email: "palashkarar80@gmail.com", phone: "-" },
+            { name: "Rahul Kumar", roll: "12538", branch: "CSE", sem: "1st Sem", email: "rahulkumarto9262584906@gmail.com", phone: "-" },
+            { name: "Aditya Raj", roll: "12540", branch: "CSE", sem: "1st Sem", email: "novawuther@gmail.com", phone: "9801365390" },
+            { name: "Manish Kumar", roll: "12543", branch: "CSE", sem: "1st Sem", email: "tsmanish08@gmail.com", phone: "8969502006" },
+            { name: "Soni Kumari", roll: "12552", branch: "CSE", sem: "1st Sem", email: "kumarisoni57884@gmail.com", phone: "9508572481" },
+            { name: "Chandan Karmkar", roll: "825014", branch: "BCA", sem: "1st Sem", email: "chandan.karmkar014@gmail.com", phone: "6206170952" },
+            { name: "Saddam Husein", roll: "825084", branch: "BCA", sem: "1st Sem", email: "saddamhusen57342@gmail.com", phone: "9102220049" },
+            { name: "Bhavesh Kumar", roll: "825029", branch: "BCA", sem: "1st Sem", email: "bhavesh754993@gmail.com", phone: "7549915471" },
+            { name: "Gitanjali Kumari", roll: "825188", branch: "BCA", sem: "1st Sem", email: "gk2006.in@gmail.com", phone: "7903938902" },
+            { name: "Divya Singh", roll: "12573", branch: "CSE", sem: "1st Sem", email: "divyasinghk4@gmail.com", phone: "9905446912" },
+            { name: "Prerana Das", roll: "825049", branch: "CSE", sem: "1st Sem", email: "preranadas52@gmail.com", phone: "6299737505" },
+            { name: "Alen Sunny", roll: "825086", branch: "BCA", sem: "1st Sem", email: "alensunny0077@gmail.com", phone: "7979840793" },
+            { name: "Masoom Raza", roll: "825086", branch: "BCA", sem: "1st Sem", email: "alensunny0077@gmail.com", phone: "7979840793" },
+            { name: "Yunaina", roll: "825160", branch: "BCA", sem: "1st Sem", email: "yunainakarn370@gmail.com", phone: "8252283039" },
+            { name: "Virat Kumar Singh", roll: "825055", branch: "BCA", sem: "1st Sem", email: "singhvirat12045@gmail.com", phone: "7261839448" }
+        ];
+
+        // Stats Update
+        document.getElementById('total-students').textContent = students.length;
+        document.getElementById('total-records-badge').textContent = students.length;
+        document.getElementById('cse-count').textContent = students.filter(s => s.branch === 'CSE').length;
+        document.getElementById('bca-count').textContent = students.filter(s => s.branch === 'BCA').length;
+
+        // Render Table
         const tableBody = document.getElementById('tableBody');
         const noResults = document.getElementById('no-results');
         const searchInput = document.getElementById('searchInput');
-        const totalStudentsEl = document.getElementById('total-students');
-        const totalRecordsBadgeEl = document.getElementById('total-records-badge');
-        const cseCountEl = document.getElementById('cse-count');
-        const bcaCountEl = document.getElementById('bca-count');
-
-        function updateStats() {
-            totalStudentsEl.textContent = students.length;
-            totalRecordsBadgeEl.textContent = students.length;
-            cseCountEl.textContent = students.filter(s => s.branch.toUpperCase() === 'CSE').length;
-            bcaCountEl.textContent = students.filter(s => s.branch.toUpperCase() === 'BCA').length;
-        }
 
         function renderTable(data) {
             tableBody.innerHTML = '';
@@ -399,7 +459,7 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-gray-50 transition-colors";
                 
-                const isCSE = student.branch.toUpperCase() === 'CSE';
+                const isCSE = student.branch === 'CSE';
                 const avatarBg = isCSE ? 'bg-blue-100 text-blue-600' : 'bg-yellow-100 text-yellow-600';
                 const badgeBg = isCSE ? 'bg-blue-50 text-blue-700' : 'bg-yellow-50 text-yellow-700';
 
@@ -418,7 +478,7 @@
                     <td class="text-xs sm:text-sm font-mono text-gray-600">${student.roll}</td>
                     <td>
                         <span class="px-2 py-1 rounded text-[10px] sm:text-xs font-bold uppercase tracking-wide ${badgeBg}">
-                            ${student.branch} - ${(student.sem || '').split(' ')[0] || student.sem}
+                            ${student.branch} - ${student.sem.split(' ')[0]}
                         </span>
                     </td>
                     <td>
@@ -438,79 +498,55 @@
             });
         }
 
-        function renderChart() {
-            const ctx = document.getElementById('studentChart').getContext('2d');
-
-            const bca1 = students.filter(s => s.branch.toUpperCase() === 'BCA' && s.sem.toLowerCase().includes('1')).length;
-            const bca3 = students.filter(s => s.branch.toUpperCase() === 'BCA' && s.sem.toLowerCase().includes('3')).length;
-            const bca5 = students.filter(s => s.branch.toUpperCase() === 'BCA' && s.sem.toLowerCase().includes('5')).length;
-            const cse1 = students.filter(s => s.branch.toUpperCase() === 'CSE' && s.sem.toLowerCase().includes('1')).length;
-            const cse3 = students.filter(s => s.branch.toUpperCase() === 'CSE' && s.sem.toLowerCase().includes('3')).length;
-
-            const data = [bca1, bca3, bca5, cse1, cse3];
-
-            if (chart) {
-                chart.data.datasets[0].data = data;
-                chart.update();
-                return;
-            }
-
-            chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['BCA 1st', 'BCA 3rd', 'BCA 5th', 'CSE 1st', 'CSE 3rd'],
-                    datasets: [{
-                        label: 'Students',
-                        data: data,
-                        backgroundColor: ['#FACC15', '#EAB308', '#CA8A04', '#3B82F6', '#2563EB'],
-                        borderRadius: 8,
-                        barThickness: 32
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true, grid: { color: '#f3f4f6' }, border: { display: false } },
-                        x: { grid: { display: false }, border: { display: false } }
-                    },
-                    onClick: () => {
-                        haptic(25);
-                    }
-                }
-            });
-        }
-
-        // --- GOOGLE SHEET FETCH VIA API ---
-        async function loadStudentsFromAPI() {
-            try {
-                const res = await fetch(STUDENT_API_URL);
-                const data = await res.json();
-                students = data;
-
-                updateStats();
-                renderTable(students);
-                renderChart();
-            } catch (err) {
-                console.error("API load error:", err);
-                document.getElementById('no-results').classList.remove('hidden');
-            }
-        }
+        renderTable(students);
 
         // Search Logic
         searchInput.addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const filtered = students.filter(s => 
                 s.name.toLowerCase().includes(term) || 
-                s.roll.toLowerCase().includes(term) || 
+                s.roll.includes(term) || 
                 s.branch.toLowerCase().includes(term)
             );
             renderTable(filtered);
         });
 
+        // Chart
+        const ctx = document.getElementById('studentChart').getContext('2d');
+        const bca1 = students.filter(s => s.branch === 'BCA' && s.sem === '1st Sem').length;
+        const bca3 = students.filter(s => s.branch === 'BCA' && s.sem === '3rd Sem').length;
+        const bca5 = students.filter(s => s.branch === 'BCA' && s.sem === '5th Sem').length;
+        const cse1 = students.filter(s => s.branch === 'CSE' && s.sem === '1st Sem').length;
+        const cse3 = students.filter(s => s.branch === 'CSE' && s.sem === '3rd Sem').length;
+
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['BCA 1st', 'BCA 3rd', 'BCA 5th', 'CSE 1st', 'CSE 3rd'],
+                datasets: [{
+                    label: 'Students',
+                    data: [bca1, bca3, bca5, cse1, cse3],
+                    backgroundColor: ['#FACC15', '#EAB308', '#CA8A04', '#3B82F6', '#2563EB'],
+                    borderRadius: 8,
+                    barThickness: 32
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#f3f4f6' }, border: { display: false } },
+                    x: { grid: { display: false }, border: { display: false } }
+                },
+                onClick: () => {
+                    haptic(25);
+                }
+            }
+        });
+
         // HAPTIC: buttons + scroll (speed-based)
-        function setupHaptics() {
+        window.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('button').forEach(btn => {
                 btn.addEventListener('click', () => haptic(18));
             });
@@ -552,12 +588,6 @@
                     lastVibrate = now;
                 }
             }, { passive: true });
-        }
-
-        // INIT
-        document.addEventListener('DOMContentLoaded', () => {
-            setupHaptics();
-            loadStudentsFromAPI();
         });
     </script>
 </body>
