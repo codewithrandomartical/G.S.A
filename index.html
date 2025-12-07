@@ -115,7 +115,6 @@
             background-color: #f9fafb;
         }
 
-        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -124,7 +123,6 @@
             animation: fadeIn 0.4s ease-out forwards;
         }
         
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
@@ -329,10 +327,8 @@
 
     <!-- JS Logic -->
     <script>
-        // === CONFIG: GOOGLE SHEET SYNC (CSV) ===
-        // Sheet link: https://docs.google.com/spreadsheets/d/1Sc6V02qZZIZcbEZVgd3RJbYVxeNXJ7tocjfzS1BtYQk/edit?usp=sharing
-        const SHEET_ID = "1Sc6V02qZZIZcbEZVgd3RJbYVxeNXJ7tocjfzS1BtYQk";
-        const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
+        // === CONFIG: API (serverless) ===
+        const STUDENT_API_URL = "/api/students"; // same-origin API
 
         let students = [];
         let chart = null;
@@ -486,48 +482,18 @@
             });
         }
 
-        // --- SIMPLE CSV PARSER ---
-        function parseCSV(text) {
-            const lines = text.trim().split(/\r?\n/);
-            if (!lines.length) return { header: [], rows: [] };
-
-            const header = lines[0].split(',').map(h => h.trim());
-            const rows = lines.slice(1).map(line => line.split(',').map(c => c.trim()));
-            return { header, rows };
-        }
-
-        // --- GOOGLE SHEET FETCH (CSV) ---
-        async function loadStudentsFromSheet() {
+        // --- GOOGLE SHEET FETCH VIA API ---
+        async function loadStudentsFromAPI() {
             try {
-                const res = await fetch(SHEET_URL);
-                const csvText = await res.text();
-
-                const { header, rows } = parseCSV(csvText);
-                const lowerHeader = header.map(h => h.toLowerCase());
-
-                // Column names expected in sheet:
-                // Name | Roll Number | Branch | Sem | Email | Phone
-                const idxName   = lowerHeader.indexOf('name');
-                const idxRoll   = lowerHeader.indexOf('roll number');
-                const idxBranch = lowerHeader.indexOf('branch');
-                const idxSem    = lowerHeader.indexOf('sem');
-                const idxEmail  = lowerHeader.indexOf('email');
-                const idxPhone  = lowerHeader.indexOf('phone');
-
-                students = rows.map(cols => ({
-                    name:   (cols[idxName]   || '').trim(),
-                    roll:   (cols[idxRoll]   || '').trim(),
-                    branch: (cols[idxBranch] || '').trim(),
-                    sem:    idxSem  >= 0 ? (cols[idxSem]  || '').trim() : '',
-                    email:  idxEmail>= 0 ? (cols[idxEmail]|| '').trim() : '',
-                    phone:  idxPhone>= 0 ? (cols[idxPhone]|| '').trim() : ''
-                })).filter(s => s.name && s.roll);
+                const res = await fetch(STUDENT_API_URL);
+                const data = await res.json();
+                students = data;
 
                 updateStats();
                 renderTable(students);
                 renderChart();
             } catch (err) {
-                console.error("Sheet load error:", err);
+                console.error("API load error:", err);
                 document.getElementById('no-results').classList.remove('hidden');
             }
         }
@@ -545,7 +511,6 @@
 
         // HAPTIC: buttons + scroll (speed-based)
         function setupHaptics() {
-            // All buttons vibrate on click
             document.querySelectorAll('button').forEach(btn => {
                 btn.addEventListener('click', () => haptic(18));
             });
@@ -592,7 +557,7 @@
         // INIT
         document.addEventListener('DOMContentLoaded', () => {
             setupHaptics();
-            loadStudentsFromSheet();
+            loadStudentsFromAPI();
         });
     </script>
 </body>
