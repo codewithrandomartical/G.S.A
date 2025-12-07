@@ -11,30 +11,25 @@
     <meta name="author" content="G.S.A Technical Team">
     <meta name="robots" content="index, follow">
 
-    <!-- ✅ Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <!-- ✅ Open Graph (Facebook, WhatsApp, LinkedIn) – SAME AS BEFORE -->
     <meta property="og:site_name" content="G.S.A Student Portal">
     <meta property="og:title" content="G.S.A Student Portal | Official Dashboard">
     <meta property="og:description" content="Access live student records, department analytics, active batches and the complete directory of CSE & BCA students through the official G.S.A Portal.">
-    <meta property="og:image" content="photo_6174982985677999041_w.jpg">
+    <meta property="og:image" content="https://i.ibb.co/7ty6G1zs/Screenshot-2025-12-07-at-3-05-22-PM.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:type" content="image/png">
     <meta property="og:url" content="https://gsa-portal.web.app">
     <meta property="og:type" content="website">
 
-    <!-- ✅ Twitter Card -->
+    <!-- ✅ Twitter Card – SAME AS BEFORE -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="G.S.A Student Portal | Student Dashboard">
     <meta name="twitter:description" content="Official G.S.A dashboard for student records, department analytics and batch management system.">
-    <meta name="twitter:image" content="photo_6174982985677999041_w.jpg">
+    <meta name="twitter:image" content="https://i.ibb.co/7ty6G1zs/Screenshot-2025-12-07-at-3-05-22-PM.png">
 
-    <!-- ✅ Favicon from same JPG -->
+    <!-- ✅ Favicon – local JPG in same folder -->
     <link rel="icon" type="image/jpeg" href="photo_6174982985677999041_w.jpg">
-</head>
-
-
-    <!-- ✅ Favicon -->
-    <link rel="icon" href="https://ui-avatars.com/api/?name=G&background=4285F4&color=fff&rounded=true" type="image/png">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -57,14 +52,16 @@
         }
 
         .sidebar-bg {
-            background-color: #111827;
+            background-color: #111827; /* Gray-900 */
         }
 
+        /* Google Brand Colors */
         .text-g-blue { color: #4285F4; }
         .text-g-red { color: #EA4335; }
         .text-g-yellow { color: #FBBC05; }
         .text-g-green { color: #34A853; }
 
+        /* Nav Buttons */
         .nav-btn {
             background: linear-gradient(90deg, #4f46e5 0%, #4338ca 100%);
             box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
@@ -85,6 +82,7 @@
             transform: none;
         }
 
+        /* Stats Card */
         .stats-card {
             background: white;
             border-radius: 16px;
@@ -99,11 +97,13 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
+        /* Border Colors */
         .border-blue-b { border-bottom-color: #3b82f6; }
         .border-green-b { border-bottom-color: #22c55e; }
         .border-yellow-b { border-bottom-color: #eab308; }
         .border-red-b { border-bottom-color: #ef4444; }
 
+        /* Custom Table */
         .custom-table th {
             font-size: 0.7rem;
             text-transform: uppercase;
@@ -122,6 +122,7 @@
             background-color: #f9fafb;
         }
 
+        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -130,6 +131,7 @@
             animation: fadeIn 0.4s ease-out forwards;
         }
         
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
@@ -141,15 +143,22 @@
 
     <!-- Sidebar -->
     <aside class="w-72 sidebar-bg flex flex-col flex-shrink-0 z-20 hidden md:flex shadow-2xl">
+        <!-- Logo Area -->
         <div class="p-8 pb-4">
-            <div class="py-3 px-6 flex items-center justify-center transform hover:scale-105 transition-transform duration-300">
-                <span class="text-4xl font-extrabold tracking-tight drop-shadow-lg">
+            <div class="py-3 px-6 flex items-center justify-center space-x-3 transform hover:scale-105 transition-transform duration-300">
+                <img 
+                    src="photo_6174982985677999041_w.jpg"
+                    alt="G.S.A Logo"
+                    class="h-10 w-10 rounded-full object-cover shadow-md"
+                >
+                <span class="text-3xl font-extrabold tracking-tight drop-shadow-lg">
                     <span class="text-g-blue">G</span><span class="text-g-red">.</span><span class="text-g-yellow">S</span><span class="text-g-blue">.</span><span class="text-g-green">A</span>
                 </span>
             </div>
             <p class="text-gray-500 text-[10px] uppercase font-bold tracking-widest mt-6 mb-2 pl-2">Main Menu</p>
         </div>
 
+        <!-- Navigation -->
         <nav class="flex-1 px-5 space-y-4">
             <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-5 py-4 rounded-xl text-white font-medium text-left">
                 <i class="fa-solid fa-chart-pie w-5 text-lg"></i>
@@ -161,22 +170,30 @@
             </button>
         </nav>
         
+        <!-- Sidebar Footer -->
         <div class="p-6">
-             <div class="bg-gray-800/60 rounded-xl p-4 border border-gray-700/50 backdrop-blur-sm">
-                 <div class="flex items-center space-x-2 justify-center mb-1">
-                     <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                     <p class="text-gray-400 text-xs">System Online</p>
-                 </div>
-                 <p class="text-gray-600 text-[10px] text-center">&copy; 2025 G.S.A Portal</p>
-             </div>
+            <div class="bg-gray-800/60 rounded-xl p-4 border border-gray-700/50 backdrop-blur-sm">
+                <div class="flex items-center space-x-2 justify-center mb-1">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <p class="text-gray-400 text-xs">System Online</p>
+                </div>
+                <p class="text-gray-600 text-[10px] text-center">&copy; 2025 G.S.A Portal</p>
+            </div>
         </div>
     </aside>
 
     <!-- Mobile Header -->
     <div class="md:hidden fixed top-0 w-full sidebar-bg text-white z-50 px-4 py-3 flex justify-between items-center shadow-md">
-        <span class="font-extrabold text-xl">
-            <span class="text-g-blue">G</span><span class="text-g-red">.</span><span class="text-g-yellow">S</span><span class="text-g-green">.A</span>
-        </span>
+        <div class="flex items-center space-x-2">
+            <img 
+                src="photo_6174982985677999041_w.jpg"
+                alt="G.S.A Logo"
+                class="h-8 w-8 rounded-full object-cover"
+            >
+            <span class="font-extrabold text-lg">
+                <span class="text-g-blue">G</span><span class="text-g-red">.</span><span class="text-g-yellow">S</span><span class="text-g-green">.A</span>
+            </span>
+        </div>
         <button id="mobile-menu-btn" class="text-white p-2 bg-gray-800 rounded-lg">
             <i class="fa-solid fa-bars text-xl"></i>
         </button>
@@ -198,7 +215,9 @@
                 <p class="text-gray-500 mt-1 text-sm">Real-time overview of student performance & metrics.</p>
             </header>
 
+            <!-- Stats Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                <!-- Total -->
                 <div class="stats-card p-5 sm:p-6 border-blue-b">
                     <div class="flex justify-between items-start">
                         <div>
@@ -212,6 +231,7 @@
                     </div>
                 </div>
 
+                <!-- CSE -->
                 <div class="stats-card p-5 sm:p-6 border-green-b">
                     <div class="flex justify-between items-start">
                         <div>
@@ -225,6 +245,7 @@
                     </div>
                 </div>
 
+                <!-- BCA -->
                 <div class="stats-card p-5 sm:p-6 border-yellow-b">
                     <div class="flex justify-between items-start">
                         <div>
@@ -238,6 +259,7 @@
                     </div>
                 </div>
 
+                <!-- Batches -->
                 <div class="stats-card p-5 sm:p-6 border-red-b">
                     <div class="flex justify-between items-start">
                         <div>
@@ -252,12 +274,17 @@
                 </div>
             </div>
 
+            <!-- Chart Section -->
             <div class="bg-white rounded-2xl shadow-sm p-4 sm:p-8 mb-6 sm:mb-8 border border-gray-100">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 sm:mb-6 gap-3">
                     <h3 class="text-lg sm:text-xl font-bold text-gray-800">Student Distribution</h3>
                     <div class="flex flex-wrap space-x-2 md:space-x-3">
-                        <span class="flex items-center text-[11px] sm:text-xs font-bold text-gray-500 bg-gray-50 px-3 py-1 rounded-full"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 mr-2"></span> CSE</span>
-                        <span class="flex items-center text-[11px] sm:text-xs font-bold text-gray-500 bg-gray-50 px-3 py-1 rounded-full"><span class="w-2.5 h-2.5 rounded-full bg-yellow-400 mr-2"></span> BCA</span>
+                        <span class="flex items-center text-[11px] sm:text-xs font-bold text-gray-500 bg-gray-50 px-3 py-1 rounded-full">
+                            <span class="w-2.5 h-2.5 rounded-full bg-blue-500 mr-2"></span> CSE
+                        </span>
+                        <span class="flex items-center text-[11px] sm:text-xs font-bold text-gray-500 bg-gray-50 px-3 py-1 rounded-full">
+                            <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 mr-2"></span> BCA
+                        </span>
                     </div>
                 </div>
                 <div class="h-64 md:h-80 w-full">
@@ -274,19 +301,26 @@
             </header>
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 flex flex-col overflow-hidden">
+                <!-- Toolbar -->
                 <div class="p-4 sm:p-5 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4 bg-gray-50/30">
                     <div class="flex items-center space-x-2">
-                         <span class="bg-indigo-50 px-3 sm:px-4 py-1.5 rounded-lg border border-indigo-100 text-[11px] sm:text-xs font-bold text-indigo-700 uppercase tracking-wide">
+                        <span class="bg-indigo-50 px-3 sm:px-4 py-1.5 rounded-lg border border-indigo-100 text-[11px] sm:text-xs font-bold text-indigo-700 uppercase tracking-wide">
                             Total Records: <span id="total-records-badge" class="ml-1 text-sm">62</span>
-                         </span>
+                        </span>
                     </div>
                     
                     <div class="relative w-full md:w-96">
                         <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-gray-400 text-sm"></i>
-                        <input type="text" id="searchInput" placeholder="Search by name, roll no or branch..." class="w-full pl-9 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm bg-white shadow-sm transition-all">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="Search by name, roll no or branch..." 
+                            class="w-full pl-9 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm bg-white shadow-sm transition-all"
+                        >
                     </div>
                 </div>
 
+                <!-- Table Container -->
                 <div class="flex-1 overflow-y-auto overflow-x-auto">
                     <table class="w-full min-w-[650px] text-left border-collapse custom-table">
                         <thead class="sticky top-0 z-10 shadow-sm">
@@ -297,7 +331,9 @@
                                 <th>Contact</th>
                             </tr>
                         </thead>
-                        <tbody id="tableBody"></tbody>
+                        <tbody id="tableBody">
+                            <!-- JS populates -->
+                        </tbody>
                     </table>
                 </div>
                 
@@ -309,6 +345,7 @@
         </div>
     </main>
 
+    <!-- JS Logic -->
     <script>
         // --- Haptic helper ---
         function haptic(duration = 15) {
@@ -317,7 +354,7 @@
             }
         }
 
-        // View switching
+        // --- View Switching Logic ---
         function switchView(viewName) {
             const dashboard = document.getElementById('dashboard-view');
             const directory = document.getElementById('directory-view');
@@ -346,8 +383,9 @@
 
         document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
 
-        // --- DATA ---
+        // --- Data: 62 Students ---
         const students = [
+            // Page 1
             { name: "Anushka Jha", roll: "12464", branch: "CSE", sem: "3rd Sem", email: "anushka.jha1705@gmail.com", phone: "7633979154" },
             { name: "Aparna Kumari", roll: "12463", branch: "CSE", sem: "3rd Sem", email: "kaparna767@gmail.com", phone: "9153681400" },
             { name: "Vivek Kumar Sah", roll: "12458", branch: "CSE", sem: "3rd Sem", email: "studevivek2004@gmail.com", phone: "9570666092" },
@@ -367,7 +405,7 @@
             { name: "Komal Kumari", roll: "12562", branch: "CSE", sem: "1st Sem", email: "komalkumari.singh741@gmail.com", phone: "7633017976" },
             { name: "Anubhav Kumar", roll: "12570", branch: "CSE", sem: "1st Sem", email: "brandedanshu@gmail.com", phone: "7479822720" },
             { name: "Jay Kumar", roll: "824082", branch: "BCA", sem: "3rd Sem", email: "jayadav@gmail.com", phone: "9570871346" },
-
+            // Page 2
             { name: "Sakshi Kumari", roll: "824185", branch: "BCA", sem: "3rd Sem", email: "adorablesakshi0007@gmail.com", phone: "8809733546" },
             { name: "Hasan Raja", roll: "825083", branch: "BCA", sem: "1st Sem", email: "hassan8825083@gmail.com", phone: "9939247792" },
             { name: "Kinshu Kumar", roll: "825094", branch: "BCA", sem: "1st Sem", email: "xaekks@gmail.com", phone: "8809097140" },
@@ -388,7 +426,7 @@
             { name: "Pratibha Roy", roll: "825091", branch: "BCA", sem: "1st Sem", email: "raypratibha45@gmail.com", phone: "6299271296" },
             { name: "Sujal Kumar", roll: "12559", branch: "CSE", sem: "1st Sem", email: "anshu0101roy@gmail.com", phone: "9631982209" },
             { name: "Manjesh Kumar", roll: "12542", branch: "CSE", sem: "1st Sem", email: "Manjeshroy987@gmail.com", phone: "7549489579" },
-
+            // Page 3
             { name: "Rishabh Singh", roll: "823051", branch: "BCA", sem: "5th Sem", email: "rishabhsingh8409@gmail.com", phone: "8340555204" },
             { name: "Snigdha Singh", roll: "12447", branch: "CSE", sem: "3rd Sem", email: "snigdhasingh879@gmail.com", phone: "8299420617" },
             { name: "Neha Kumari", roll: "825099", branch: "BCA", sem: "1st Sem", email: "nehakumari471650@gmail.com", phone: "9279997018" },
@@ -409,25 +447,26 @@
             { name: "Gitanjali kumarl", roll: "825188", branch: "BCA", sem: "1st Sem", email: "gk2006.in@gmail.com", phone: "7903938902" },
             { name: "Soni Kumari", roll: "12552", branch: "CSE", sem: "1st Sem", email: "kumarisoni57884@gmail.com", phone: "9508572481" },
             { name: "Divya Singh", roll: "12573", branch: "CSE", sem: "1st Sem", email: "divyasinghk4@gmail.com", phone: "9905446912" },
-
+            // Page 4
             { name: "Prerana Das", roll: "825049", branch: "CSE", sem: "1st Sem", email: "preranadas52@gmail.com", phone: "6299737505" },
             { name: "Alen Sunny", roll: "825086", branch: "BCA", sem: "1st Sem", email: "alensunny0077@gmail.com", phone: "7979840793" },
             { name: "Masoom Raza", roll: "825086", branch: "BCA", sem: "1st Sem", email: "alensunny0077@gmail.com", phone: "7979840793" }
         ];
 
-        // Stats
+        // Stats Update
         document.getElementById('total-students').textContent = students.length;
         document.getElementById('total-records-badge').textContent = students.length;
         document.getElementById('cse-count').textContent = students.filter(s => s.branch === 'CSE').length;
         document.getElementById('bca-count').textContent = students.filter(s => s.branch === 'BCA').length;
 
-        // Table render
+        // Render Table
         const tableBody = document.getElementById('tableBody');
         const noResults = document.getElementById('no-results');
         const searchInput = document.getElementById('searchInput');
 
         function renderTable(data) {
             tableBody.innerHTML = '';
+            
             if (data.length === 0) {
                 noResults.classList.remove('hidden');
                 return;
@@ -438,6 +477,7 @@
             data.forEach(student => {
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-gray-50 transition-colors";
+                
                 const isCSE = student.branch === 'CSE';
                 const avatarBg = isCSE ? 'bg-blue-100 text-blue-600' : 'bg-yellow-100 text-yellow-600';
                 const badgeBg = isCSE ? 'bg-blue-50 text-blue-700' : 'bg-yellow-50 text-yellow-700';
@@ -479,6 +519,7 @@
 
         renderTable(students);
 
+        // Search Logic
         searchInput.addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const filtered = students.filter(s => 
@@ -518,15 +559,15 @@
                     x: { grid: { display: false }, border: { display: false } }
                 },
                 onClick: () => {
-                    // chart click haptic
+                    // Chart click haptic
                     haptic(25);
                 }
             }
         });
 
-        // HAPTIC: buttons + scroll (speed based)
+        // HAPTIC: buttons + scroll (speed-based)
         window.addEventListener('DOMContentLoaded', () => {
-            // All buttons vibrate
+            // All buttons vibrate on click
             document.querySelectorAll('button').forEach(btn => {
                 btn.addEventListener('click', () => haptic(18));
             });
@@ -543,6 +584,7 @@
                 const y = window.scrollY;
                 const dy = Math.abs(y - lastY);
                 const dt = now - lastTime || 16;
+
                 lastY = y;
                 lastTime = now;
 
